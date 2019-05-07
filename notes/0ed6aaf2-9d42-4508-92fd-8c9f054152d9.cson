@@ -1,0 +1,40 @@
+createdAt: "2019-03-16T01:51:25.820Z"
+updatedAt: "2019-03-16T01:57:46.534Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Java的类"
+tags: []
+content: '''
+  ## Java的类
+  
+  ### 权限修饰词
+  public：
+  具有最大的访问权限，可以访问任何一个在classpath下的类、接口、异常等。它往往用于对外的情况，也就是对象或类对外的一种接口的形式。
+  
+  protected：
+  主要的作用就是用来保护子类的。它的含义在于子类可以用它修饰的成员，其他的不可以，它相当于传递给子类的一种继承的东西
+  
+  default：
+  有时候也称为friendly，它是针对本包访问而设计的，任何处于本包下的类、接口、异常等，都可以相互访问，即使是父类没有用protected修饰的成员也可以。
+  
+  private：
+  访问权限仅限于类的内部，是一种封装的体现，例如，大多数成员变量都是修饰符为private的，它们不希望被其他任何外部的类访问。
+  
+  ### object的toString()
+  默认返回类名称和十六进制哈希值,可以被重写。
+  ```java 
+  getClass().getName()+’@’+Interger.toHexString(hashCode())。
+  ```
+  **Equals()本身是比较对象的内存地址是否相同。
+  重写equals()时需要同时重写hashCode()。
+  因为在以hash码为基础的相关环境中，需要比较两个对象是否为相同的对象时，除了使用equals()，还会使用hashCode()方法。**
+  
+  ### clone()方法
+  复制对象本身。要支持复制自身的对象，定义类的时候必须实现Cloneable接口，不然其实例的clone()方法被调用时，会抛出CloneNotSupportedException。
+  
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

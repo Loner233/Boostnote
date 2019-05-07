@@ -1,0 +1,119 @@
+createdAt: "2019-03-16T00:16:37.368Z"
+updatedAt: "2019-03-16T01:07:20.090Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Java装箱和拆箱"
+tags: []
+content: '''
+  ### Java装箱和拆箱
+  自动装箱和拆箱的目的是将原始类型值自动地转换成对应的对象。自动装箱与拆箱的机制可以让我们在Java的变量赋值或者是方法调用等情况下使用原始类型或者对象类型更加直接简单。
+  
+  1. 自动装箱就是Java自动将原始类型值转换成对应的对象，比如将int的变量转换成Integer对象。
+  2. 拆箱就是将Integer对象转换成int类型值。
+  
+  #### 自动装箱拆箱的要点
+  1. 自动装箱是编译器调用valueOf将原始类型值装换成对象，自动拆箱时调用xxxValue()这类方法将对象转换成原始类型值
+  2. 自动装箱是将byte，short，char，int,long,float,double,boolean对应封装类Byte,Short,Character,Integer,Long,Float,Double,Boolean
+  
+  
+  ### 何时发生自动装箱和拆箱
+  比如有一个方法，接受一个对象类型的参数，而我传递了一个原始类型的值，这时候就会发生自动装箱和自动拆箱了。如
+  **这里面要求的是Integer类型的对象，而传入的是一个原始int类型的值，这样就会发生自动装箱了**
+  
+  ```java 
+  ArrayList<Integer> intList = new ArrayList<Integer>();
+  intList.add(1);
+  intList.add(2); 
+  
+  ThreadLocal<Integer> intLocal = new ThreadLocal<Integer>();
+  intLocal.set(4)
+  
+  ```
+  *自动装箱主要发生在两种情况：**1.赋值**，**2.方法调用***
+  1. 赋值时
+  ```java
+  //在自动装箱引入之前
+  Integer iO = Integer.valueOf(3);
+  Int iP = iO.intValue();
+  
+  //自动装箱引入之后
+  Integer iO = 3;
+  int iP = iO;
+  
+  ```
+  3. 方法调用时 
+  ```java
+  public static Integer show(Integer iParam){
+     System.out.println("自动装箱的i: " + iParam);
+     return iParam;
+  }
+   
+  show(3); //自动装箱了
+  int result = show(3); //自动拆箱了
+  ```
+  #### 自动装箱的弊端
+  有可能会创建多余的对象影响性能
+  ```java
+  Integer sum = 0;
+  for(int i = 0;i < 1000;i++){
+    sum = i + sum;
+  }```
+  以上操作+不适用与Integer,所以sum进行自动拆箱，然后进行数值相加，最后通过装箱转换成Integer对象，变换成如下
+  ```java
+  int result = sum.intValue() + i;
+  Integer sum = new Integer(result)```
+  以上在循环的时候会产生多个无用的Integer对象
+  
+  
+  #### 重载与自动装箱
+  在1.5之前,`value(int)`和`value(Integer)`是完全不同的方法,不会因为传入int还是Integer而困惑。引入了自动装箱和拆箱，虫灾就是困难了，如ArrayList的remove方法，他有`remove(index)`和`remove(Object)`两种方法如下就会存在不小的疑惑。
+  ```java
+    ArrayList<Integer> intList = new ArrayList<Integer>();
+    intList.add(1);
+    intList.add(2);
+    Integer i = 1;
+    intList.remove(i); //remove 的是第一个对象
+    intList.remove(1); //remove 的是第二个对象
+    ```
+  
+  #### 注意点
+  PS:在例子三中obj2会使用缓存的对象，具体可以看`Integer.valueOf()`的定义。JVM会对-128到127的Integer对象进行缓存
+  ```java
+  // Example 1: == comparison pure primitive – no autoboxing
+  int i1 = 1;
+  int i2 = 1;
+  System.out.println(i1 == i2); // true
+  
+  // Example 2: equality operator mixing object and primitive
+  Integer num1 = 1; // autoboxing
+  int num2 = 1;
+  System.out.println(num1 == num2); // true
+  
+  // Example 3: special case - arises due to autoboxing in Java
+  Integer obj1 = 1; // autoboxing will call Integer.valueOf()
+  Integer obj2 = 1; // same call to Integer.valueOf() will return same cached Object
+  System.out.println(obj1 == obj2); // true
+  
+  // Example 4: equality operator - pure object comparison
+  Integer one = new Integer(1); // no autoboxing
+  Integer anotherOne = new Integer(1);
+  System.out.println(one == anotherOne); // false
+  ```
+  
+  避免对象和原始数据进行比较,以下会NullPointerException
+  ```java
+  private static Integer count;
+   
+  //NullPointerException on unboxing
+  if( count <= 0){
+    System.out.println("Count is not started yet");
+  }
+  ```
+  
+  有可能对缓存、垃圾回收产生压力
+'''
+linesHighlighted: [
+  2
+]
+isStarred: false
+isTrashed: false

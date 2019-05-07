@@ -1,0 +1,116 @@
+createdAt: "2019-03-17T15:30:27.302Z"
+updatedAt: "2019-03-24T07:34:26.881Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Java类型信息"
+tags: []
+content: '''
+  ### Java类型信息
+  在Java中有两种方法用来在运行时识别类和对象的信息，一种是传统的RTTI，另一种是反射。
+  
+  #### RTTI Run-Time Type Information 运行时类型信息。
+  1. 为什么需要RTTI
+  越是优秀的面向对象设计，越是强调高内聚低耦合
+  有一个抽象父类：
+  ```java
+  shape draw()```
+  以下有三个具体类：
+  ```java
+  Circle draw()
+  Square draw()
+  Triangle draw()
+  ```
+  某些情况下，我们持有`Shape`，但远远不够——因为我们想要针对他的具体类型进行特殊处理，然而我们的设计完全对抽象，所以在当前上下文环境中无法判断具体类型。
+  由于RTTI的存在，所以我们可以再不破坏设计的前提下达到目的。
+  
+  #### Class类与Class对象
+  每一个类都持有与其对应的Class类的对象的引用，Object类中的getClass() 能让我们获得他，其中包含了与类相关的信息。针对每一个类，编译java文件会生成一个二进制.class文件，其中就保存着该类对应的Class对象的信息。
+  
+  #### `.class`是用于供类加载器使用的文件
+  Java程序在运行之前并没有被完全加载，各部分是在需要时才被加载的。
+  为了使用类而做的准备有三步：
+  1. 加载。由类加载器执行，查找字节码，创建一个`Class`对象。
+  2. 链接。验证字节码，为静态域分配存储空间。如果有必要的话，会解析这个类创建的对其他类的所有引用（比如说该类持有Static域）
+  3. 初始化。如果该类有超类，则对其初始化，执行静态初始化器和静态初始化块
+  
+  所有的类都是在对其第一次使用时，动态加载到JVM中去的。当程序创建第一个对类的静态成员的引用时，JVM会使用类加载器来根据类名查找同名的.class——一旦某个类的Class对象被载入内存，他就被用来创建这个类的所有对像。构造器也是类的静态方法，使用new操作符创建新对象会被当作对类的静态成员的引用。
+  
+  #### `Class.forName(String str)`
+  `Class`类有一个很有用的静态方法`forName(String str)`, 可以让我们对于某个类不进行创建就得到它的Class对象的引用
+  ```java
+  try{
+   Class toyClass = Class.forName("com.duanze.toy");//   必须使用全限定名
+  }catch(ClassNotFoundException e){
+  
+  }
+  ```
+  `forName(String str)`有一个副作用:如果Toy类没有被加载，调用它会出发`Toy`类的`static`子句（静态初始化块）
+  与之相必，更好用的是**类字面常量**
+  `Class toyClass = Toy.class;`
+  支持编译时检查，所以不会抛出异常。使用类字面常量穿件Class对象的引用与forName（String str）不同，不会出发静态初始化块。
+  
+  #### 拓展
+  `Class.forName(String className)`使用装类当前类的类装载器来装载指定类，因为其方法内部调用了`Class.forName(className,true,this.getClass().getClassLoader())`方法
+  可以手动指定装载器：
+  ```java
+  ClassLoader cl = new ClassLoader();
+  Class c1 = cl.loadClass(String className,boolean resolve);
+  ```
+  
+  #### 泛化的`Class`引用
+  通过泛型及通配符，我们能对Class对象的引用进行类型限定，如：
+  ```java
+  Class<Integer> intClass = int.class
+  ```
+  这样可以进行额外的类型检查
+  ```java
+  Class toyClass = Toy.class;
+  Class<?> toyClass = Toy.class;
+  ```
+  
+  #### Class.newInstance()
+  既然拿到了包含这类信息的Class对象的引用，我们可以构造出一个类的实例。
+  `Class.newInstance()`就是这样一个方法,如：
+  ```java
+  // One
+  try{
+    Class<?> toyClass = Class.forName("com.duanze.Toy");
+    Object obj = toyClass.newInstance();
+  }catch(ClassNotFoundException e){
+  
+  }
+  //two
+  Class<?> toyClass = Toy.class;
+  Object obj = toyClass.newInstance();
+  ```
+  
+  #### 类型检查
+  在进行类型转换之前，可以使用`instanceof`关键字来检查类型
+  ```java
+  if(x instanceof Shape){
+  Shape s = (Shape)x;
+  }```
+  一般情况下instanceof已经够用，但有些时候需要更动态的检测途径：`Class.isInstance(CLass clz)`:
+  ```java
+  Class<Shape> s = Shape.class;
+  s.isInstance(x);
+  ```
+  `isInstance()`左右两边都是可变的，这一动态性有时可以让大量包裹在`if else`中的`instanceof`缩减为一句
+  使用newInstance()创建的类，必须带有默认构造器。
+  由于toyClass仅仅只是一个Class对象引用，在编译期不具备进一步的类型信息，所以使用newInstance()时只会得到一个Object引用。如需要拿到确切类型，需要如下
+  ```java
+  Class<Toy> toyClass = Toy.class;
+  Toy obj = toyClass.newInstance();
+  ```
+  但如下还是只能拿到Object的应用
+  ```java
+  Class<SubToy> subToyClass = SubToy.class;
+  Class<? super SubToy? upClass = subToy.getSuperclass();
+  Object obj = upClass.newInstance();
+  ```
+  其中并不支持`Class<Toy> upClass = subToy.getSuperclass();`,
+  只能接收```Class<? super SubToy> upClass = subToy.getSuperclass(); // 希望拿到SubToy的父类Toy```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

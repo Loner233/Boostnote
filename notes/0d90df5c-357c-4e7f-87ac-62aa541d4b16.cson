@@ -1,0 +1,45 @@
+createdAt: "2019-03-07T15:42:03.397Z"
+updatedAt: "2019-03-15T14:15:17.265Z"
+type: "SNIPPET_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: ""
+tags: []
+description: ""
+snippets: [
+  {
+    linesHighlighted: []
+    name: "MyStringBuilder.java"
+    mode: "Java"
+    content: '''
+      public class MyStringBuilder {
+      
+      //  StringBuilder用于单机非多线程
+      //  StringBuffer处理同步，多线程
+          StringBuffer stringBuffer1 = new StringBuffer();
+          StringBuffer stringBuffer2 = new StringBuffer(20);
+          StringBuffer stringBuffer3 = new StringBuffer("123");
+          StringBuffer stringBuffer4 = new StringBuffer(stringBuffer3);
+          void mytest(){
+              stringBuffer1.append(123);
+              stringBuffer1.append(123);
+              stringBuffer1.append(123);
+              System.out.println(stringBuffer1);
+              System.out.println(stringBuffer1.charAt(1));
+              System.out.println(stringBuffer1.capacity());
+              System.out.println(stringBuffer1.codePointAt(1));
+              System.out.println(stringBuffer1.insert(1,"123"));
+              System.out.println(stringBuffer1.indexOf("123"));
+      
+          }
+          public static void main(String [] args){
+              MyStringBuilder myStringBuilder = new MyStringBuilder();
+              myStringBuilder.mytest();
+          }
+      
+      }
+      
+    '''
+  }
+]
+isStarred: false
+isTrashed: true

@@ -1,0 +1,69 @@
+createdAt: "2019-03-15T14:29:14.184Z"
+updatedAt: "2019-03-15T15:13:39.051Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Java中的构造器，构造代码块，静态代码块"
+tags: []
+content: '''
+  ## Java中的构造器，构造代码块，静态代码块
+  1. 构造器与类同名，且没有返回类型和返回值
+      1. 无参构造函数
+      ```java
+      public class myclass{
+        public myclass(){}//系统会自动生成
+      }
+      ```
+      2. 有参构造函数
+      ```java
+      public class myclass{
+        public myclass(int a){
+        //对成员函数进行赋值
+        }
+      }
+      
+      ```
+  2. 构造代码块（对象一实例化就执行，**每次实例化就执行一次**）
+      ```java
+      public class myclass{
+        public myclass(){
+          System.out.println("我是构造方法!");
+        }
+          {
+            System.out.println("我是构造代码块!");
+          }
+        public static void main(String[] args){
+          myclass m1 = new myclass();
+          myclass m2 = new myclass();
+        }
+      }
+  
+      ```
+    #### 结果:
+      我是构造代码块！
+      我是构造方法！
+      我是构造代码块！
+      我是构造方法！
+      
+  4. 静态代码块（**无论实例话多少次，仅执行一次**）
+      ```java
+      public class myclass{
+        public myclass(){
+          System.out.println("我是构造方法!");
+        }
+          static {
+            System.out.println("我是静态代码块!");
+          }
+        public static void main(String[] args){
+          myclass m1 = new myclass();
+          myclass m2 = new myclass();
+        }
+      }
+      ```
+    #### 结果:
+      我是静态代码块！
+      我是构造方法！
+      我是构造方法！
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

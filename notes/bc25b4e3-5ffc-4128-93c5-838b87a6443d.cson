@@ -1,0 +1,25 @@
+createdAt: "2019-03-29T13:07:17.583Z"
+updatedAt: "2019-03-29T13:13:37.371Z"
+type: "MARKDOWN_NOTE"
+folder: "8fc235f5f536710af3fe"
+title: "Scala基本操作"
+tags: []
+content: '''
+  ## Scala基本操作
+  -|-
+  -|-
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+  List()或Nil | 空List |
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

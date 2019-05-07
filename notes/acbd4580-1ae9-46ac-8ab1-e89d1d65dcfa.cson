@@ -1,0 +1,37 @@
+createdAt: "2019-03-31T12:09:34.038Z"
+updatedAt: "2019-03-31T12:16:56.469Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "图形集合中的tf.add_to_collection与tf.get_collection函数"
+tags: []
+content: '''
+  ### 图形集合中的tf.add_to_collection与tf.get_collection函数
+  tf.add_to_collection是把多个变量放入一个自己用引号命名的集合里，也就是把多个变量统一放在一个列表中。
+  
+  tf.get_collection与之相反，是从列表中取出所有元素，构成一个新的列表。
+  
+  用tf.add_to_collection将多个变量放在命名为‘regularizer’的域中，构成一个列表。而’regularizer’本身并不是列表，无法直接显示操作，只有用tf.get_collection作用到’regularizer’上后，得到的才是这个可操作的列表本身。
+  
+  ```python
+  w = tf.get_variable('weight', dtype=tf.float32,initializer=tf.contrib.layers.xavier_initializer())
+  tf.add_to_collection('regularizer', tf.contrib.layers.l2_regularizer(regular_num=0.001)(w))
+  
+  shared = tf.nn.conv2d(input, w, [1, stride, stride, 1], padding=padding)
+  
+  b = tf.get_variable('bias', [out_dim], 'float32', initializer=tf.constant_initializer(0.))
+  tf.add_to_collection('regularizer', tf.contrib.layers.l2_regularizer(regular_num=0.001)(b))
+  
+  out = tf.nn.bias_add(shared, b)
+  ```
+  上面的是在定义conv2d时将参数w,b做L2正则后放到‘regularizer’中，下面是定义loss时调用'regularizer'
+  
+  ```python
+  regular = tf.add_n(tf.get_collection('regularizer'), 'loss') 
+  # tf.add_n(inputs,name)
+  with tf.variable_scope(name='loss') as scope:
+      loss = -tf.reduce_sum(label*tf.log(y)) + regular # cross entroy + L2-norm as the loss
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

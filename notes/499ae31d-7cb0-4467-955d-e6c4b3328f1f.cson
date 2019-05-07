@@ -1,0 +1,114 @@
+createdAt: "2019-03-17T07:41:48.280Z"
+updatedAt: "2019-03-24T07:34:30.193Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "垃圾回收"
+tags: []
+content: '''
+  ## 垃圾回收
+  ### 引用技术法
+  给对象添加一个引用计数器，每当一个地方引用这个对象时，计数器数值+1,当引用失效时，计数器数值-1,当数值为0的时候，对象不可能再被使用，**没法解决对象间相互引用的情况**
+  
+  ### 可达性分析法
+  通过一些列“GC Roots”的对象作为起始点，从这些节点向下搜索，搜索所走过的路被称为**引用链**，当一个对象到GC Roots没有任何引用链是，则证明此对象是不可用的。
+  ##### java中可以被用来作为GC Roots的对象包括：
+  1. 虚拟机栈（栈桢中的局部变量区，也叫做局部变量表）中引用的对象。
+  2. 方法区中的静态属性的引用的对象
+  3. 方法区中常量引用的对象
+  4. 本地方法栈中JNI引用的对象
+  
+  ### 四种引用状态
+  前期java的引用定义：如果引用类型的数据中存储的数值代表的是另一块内存的起始地址，就称这块内存代表这一个引用。弊端：就只有被引用、未被引用两种状态
+  现在：当内存空间还足够的时候，对象能保留在内存中。如果内存空间还是紧张，则可以抛弃这些对象。
+  1. 强引用
+  代码中存在`Object obj = new Object()`这类的引用，只要强引用还存在，垃圾收集器永远不会回收被引用的对象。
+  2. 软引用
+  描述有些还有用但并非必须的对象。在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围进行二次回收。如果还没有足够内存才会抛内存溢出异常。
+  3. 弱引用
+  描述非必需对象。被弱引用关联的对象只能生存到下一次垃圾回收之前，垃圾收集器工作之后，无论内存是否足够，都会回收掉只被弱引用关联的对象。
+  4. 虚引用
+  虚引用的目的就是在这个对象被收集器回收时收到一个系统通知，被虚引用关联的对象和其生存时间完全没关系
+  
+  ##### 可达性算法而言，未达到的对象并非是“非死不可”。若要宣判一个对象死亡，至少要经历两次标记阶段。
+  如果该对象在可达性分析后发现没有与GCroots相连，则被第一次标记并进行一次筛选，筛选条件为是否有必要执行该队想得finalize（）方法。若没有覆盖finalize方法或已经被执行过了，则均视为不必要执行该对象的finalize方法，即该对象将会被回收。反之，这个对象会被放到一个叫F-Queue的队列中，之后会由虚拟机自动建立的、优先级低的Finalizer线程去执行，而虚拟机不必等该线程执行结束。（只负责建立线程，其他由线程处理）
+  
+  对F-Queue中对象进行第二次标记，如果对象再finalize方法中拯救了自己，即关联上了GCRoots引用链，那么第二次标记的时候该对象将会自动从“即将回收”的集合中溢出。如果对象没有拯救自己，那么就会被回收。
+  ###### Demo
+  ```java
+  package com.demo;
+  
+  /*
+   * 此代码演示了两点：
+   * 1.对象可以再被GC时自我拯救
+   * 2.这种自救的机会只有一次，因为一个对象的finalize()方法最多只会被系统自动调用一次
+   * */
+  public class FinalizeEscapeGC {
+      
+      public String name;
+      public static FinalizeEscapeGC SAVE_HOOK = null;
+  
+      public FinalizeEscapeGC(String name) {
+          this.name = name;
+      }
+  
+      public void isAlive() {
+          System.out.println("yes, i am still alive :)");
+      }
+      
+      @Override
+      protected void finalize() throws Throwable {
+          super.finalize();
+          System.out.println("finalize method executed!");
+          System.out.println(this);
+          FinalizeEscapeGC.SAVE_HOOK = this;
+      }
+  
+      @Override
+      public String toString() {
+          return name;
+      }
+  
+      public static void main(String[] args) throws InterruptedException {
+          SAVE_HOOK = new FinalizeEscapeGC("leesf");
+          System.out.println(SAVE_HOOK);
+          // 对象第一次拯救自己
+          SAVE_HOOK = null;
+          System.out.println(SAVE_HOOK);
+          System.gc();
+          // 因为finalize方法优先级很低，所以暂停0.5秒以等待它
+          Thread.sleep(500);
+          if (SAVE_HOOK != null) {
+              SAVE_HOOK.isAlive();
+          } else {
+              System.out.println("no, i am dead : (");
+          }
+  
+          // 下面这段代码与上面的完全相同,但是这一次自救却失败了
+          // 一个对象的finalize方法只会被调用一次
+          SAVE_HOOK = null;
+          System.gc();
+          // 因为finalize方法优先级很低，所以暂停0.5秒以等待它
+          Thread.sleep(500);
+          if (SAVE_HOOK != null) {
+              SAVE_HOOK.isAlive();
+          } else {
+              System.out.println("no, i am dead : (");
+          }
+      }
+  }
+  
+  ```
+  
+  ### 方法取得垃圾回收
+  方法取得垃圾主要有两部分**1.废弃常量**,**2.无用的类**
+  1. 如“abc“在常量池，而系统没有任何一个String对象引用了叫”abc“的字面量。那么垃圾时且有必要的情况下，“abc”就会被移出常量池，常量池中其他的类（接口），方法，字段的符号引用也于此类似。
+  
+  2. 判断无用的类，需满足一下三个条件
+      1.该类的所有实例已被回收
+      2.加载该类的ClassLoader已被回收
+      3.该类对应的java.lang.Class对象没有在任何地方被引用，没法在任何地方通过反射访问该类的方法。
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

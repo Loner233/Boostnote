@@ -1,0 +1,20 @@
+createdAt: "2019-04-18T12:10:59.362Z"
+updatedAt: "2019-04-18T12:14:25.543Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "标准情况下keras使用tensorboard"
+tags: []
+content: '''
+  ## 标准情况下keras使用tensorboard
+  ```python
+  log_filepath = '/tmp/keras_log' 
+  model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.001), metrics=['accuracy'])
+  tb_cb = keras.callbacks.TensorBoard(log_dir=log_filepath, write_images=1, histogram_freq=1)  
+  history = model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, callbacks=[tb_cb], validation_data=(X_test, Y_test))
+  ```
+  通过callback的形式进行记录
+  ### 在日志目录下运行`tensorboard --logdir=./`就能使用了
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

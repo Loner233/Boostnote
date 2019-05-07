@@ -1,0 +1,117 @@
+createdAt: "2019-03-15T15:40:52.973Z"
+updatedAt: "2019-03-24T07:31:43.543Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Java中执行顺序"
+tags: []
+content: '''
+  ## Java中执行顺序
+  1. 基本执行顺序1
+  ```java
+  class StaticCode1{        
+      static{                 //第4步。由第3步触发。
+          System.out.println("x");
+      }
+  }
+  
+  public class StaticDemo2 {
+      static{                 //第1步。先加载主函数所在类，所以先加载并执行这段静态代码块。
+          System.out.println("y");
+      }    
+      public static void main(String[] args) {
+          new StaticCode1();  //第3加载StaticCode1类。
+          new StaticCode1();  //不执行。静态代码块只执行一次
+          System.out.println("over"); //第5步。输出打印。
+      }
+      static{                 //第2步。多个静态代码块之前，按前后顺序执行
+          System.out.println("z");
+      }
+  }
+  ```
+  2. 基本执行顺序2
+  ```java
+  public class StaticDemo1 {                             
+      public static void main(String[] args) {
+          StaticDemo1 t1=new StaticDemo1();   //第2步，初始化构造函数，i=9
+          System.out.println(t1.i);           //第3步，按顺序执行,9
+          speak();                            //第4步，按顺序执行，调用静态函数
+          
+      }    
+      static int i=1;           //静态变量存到静态区域。    
+      static void speak()       //静态函数存到静态区域。调用时执行。
+      {
+          System.out.println("a");;
+      }
+      static {           //第1步，静态代码块随着类的加载,优先执行且只执行一次。i=3，i+3打印结果是4。
+          i = i + 3;
+          System.out.println(i);
+      }
+      
+      public StaticDemo1(){        //构造方法，初始化时执行。
+          i = i + 5;               //i=9
+          System.out.println(i);    
+      }
+  }
+  ```
+  3. 基本执行顺序3
+  ```java
+  public class StaticDemo2 {
+      public static void main(String[] args) {
+      }
+      static{                    //随类加载就执行，不需要实例化
+          System.out.println("z");
+      }
+  }
+  ```
+  4. 基本执行顺序4
+  ```java
+  class StaticCode2{        
+      StaticCode2(){                      //没有调用。
+          System.out.println("aa");
+      }
+      static{                             //1 静态代码块先执行
+          System.out.println("x");
+      }
+      
+      {                                   //2 对象的构造代码块。给对象初始化的。
+          System.out.println("cc");
+      }
+      
+      StaticCode2(int i){                 //3 被调用
+          System.out.println("aa");
+      }
+      public static void show(){          //静态方法，没有调用。
+          System.out.println("gogogo");
+      }
+  }
+  public class StaticDemo4 {
+      public static void main(String[] args) {
+          new StaticCode2(4);                    
+      }
+  }
+  ```
+  
+  5. 基本执行顺序5
+  ```java
+  public class StaticDemo5 {
+      static int i=1;
+      static{
+          System.out.println("a");        //第1步输出a，且只执行一次
+          i++;                            //i=i+1   i值为2
+      }
+      public StaticDemo5(){
+          System.out.println("c");        //第2步。
+          i++;                            //i=i+1   i值为3
+      }
+      public static void main(String[] args) {
+          StaticDemo5 t1=new StaticDemo5();
+          System.out.println(t1.i);        //第3步   i值为3
+          StaticDemo5 t2=new StaticDemo5();//第4步输出c,第二次创建实例。static静态代码块不执行。
+          System.out.println(t2.i);        //第5步。又执行了一次StaticDemo5()构造函数。4
+      }
+  }
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

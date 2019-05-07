@@ -1,0 +1,28 @@
+createdAt: "2019-03-17T08:36:35.344Z"
+updatedAt: "2019-03-24T07:34:28.551Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "静态工厂"
+tags: []
+content: '''
+  ### 静态工厂
+  一般开发中都是通过`new`关键字通过构造函数来实现对象的创建，如
+  ```java
+  Fragment fragment = new MyFragment();
+  //or
+  Date date = new Date();
+  ```
+  实际开发中，通常会见到另一种获取类实例的方法
+  ```java
+  Fragment fragment = MyFragment.newIntance();
+  
+  Calendar calendar = Calendar.getInstance();
+  
+  Integer number = Integer.valueOf("3");
+  ```
+  上述就是所谓的静态工厂方法（static factory method)
+  > **new**关键字：当我们使用 new 来构造一个新的类实例时，其实是告诉了 JVM 我需要一个新的实例。JVM 就会自动在内存中开辟一片空间，然后调用构造函数来初始化成员变量，最终把引用返回给调用方。
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

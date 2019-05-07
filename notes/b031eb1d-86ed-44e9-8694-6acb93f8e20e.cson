@@ -1,0 +1,77 @@
+createdAt: "2019-03-31T09:13:27.451Z"
+updatedAt: "2019-03-31T09:29:17.952Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "TF变量管理"
+tags: []
+content: '''
+  ## TF变量管理
+  长时间没用Tensorflow，最近使用时对里面的变量作用域感觉一脸蒙蔽，特此来复习一下。主要就是`tf.variable_scope()`
+  变量作用域的两个核心方法:
+  ```python
+  tf.get_variable(<name>, <shape>, <initializer>) #通过所给的名字创建或是返回一个变量.
+  tf.variable_scope(<scope_name>, <reuse>) #通过 tf.get_variable()为变量名指定命名空间.
+  ```
+  
+  `tf.get_variable`方法在创建初始化变量的时候与`tf.Variable`是完全一样的
+  不过`tf.get_variable`可以通过`tf.variable_scope`生成的上下文管理器获取已生成的变量值。
+  
+  
+  eg1：
+  ```python
+  import tensorflow as tf
+  with tf.variable_scope("foo"):
+      v=tf.get_variable("v",[1],initializer=tf.constant_initializer(1.0))
+  
+  with tf.variable_scope("foo"):
+      v=tf.get_variable("v",[1])
+  ```
+  这段代码会报错，因为在命名空间foo中，name为v的变量已经存在。
+  eg2:
+  ```python
+  import tensorflow as tf
+  with tf.variable_scope("foo"):
+      v=tf.get_variable("v",[1],initializer=tf.constant_initializer(1.0))
+  
+  with tf.variable_scope("foo", reuse=True):
+      v1=tf.get_variable("v",[1])
+      print(v==v1);
+  ```
+  这段代码没问题，输出为true。因为声明名称空间的时候reuse为true，不过，reuse定义为True的时候，tf.get_variable只能获取已经拥有的变量。
+  eg3:
+  ```python
+  import tensorflow as tf
+  with tf.variable_scope("foo"):
+      v=tf.get_variable("v",[1],initializer=tf.constant_initializer(1.0))
+  
+  with tf.variable_scope("bar", reuse=True):
+      v1=tf.get_variable("v",[1])
+      print(v==v1);
+  ```
+  如上，bar名称空间中没有v这个变量，同时reuse为True，命名空间中没有定义这个变量就会报错。
+  
+  eg4:
+  ```python
+  import tensorflow as tf
+  with tf.variable_scope("foo"):
+      v = tf.get_variable("v",[1],initializer=tf.constant_initializer(1.0))
+      print(v.name)
+  
+  with tf.variable_scope("foo"):
+      with tf.variable_scope("bar"):
+          v1 = tf.get_variable("v",[1])
+          print(v1.name);
+  
+  with tf.variable_scope("",reuse=True):
+      v2 = tf.get_variable("foo/v");
+      print(v2==v)
+      print(v2==v1)
+      v3 = tf.get_variable("foo/bar/v")
+      print(v3==v)
+      print(v3==v1)
+  ```
+  变量管理器还可以通过名称轻松访问变量。灵活的使用变量管理器我们可以在复杂的神经网络结构中大大的提高代码的可读性。
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

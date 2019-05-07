@@ -1,0 +1,30 @@
+{
+  "folders": [
+    {
+      "key": "7ad16a328420ce2c1cef",
+      "color": "#E10051",
+      "name": "Java"
+    },
+    {
+      "key": "c5558fe236f0266732bc",
+      "color": "#3FD941",
+      "name": "C++"
+    },
+    {
+      "key": "8fc235f5f536710af3fe",
+      "color": "#B013A4",
+      "name": "Scala"
+    },
+    {
+      "key": "91678286fbe5c256d96d",
+      "color": "#30D5C8",
+      "name": "tensorflow"
+    },
+    {
+      "key": "3ed9013aac4316501eaf",
+      "color": "#E8D252",
+      "name": "python"
+    }
+  ],
+  "version": "1.0"
+}
