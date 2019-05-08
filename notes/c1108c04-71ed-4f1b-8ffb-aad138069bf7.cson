@@ -1,0 +1,73 @@
+createdAt: "2019-05-07T07:14:21.755Z"
+updatedAt: "2019-05-07T09:30:29.077Z"
+type: "MARKDOWN_NOTE"
+folder: "56105c7777a26a536ee3"
+title: "Hadoop伪分布的配置"
+tags: []
+content: '''
+  ## Hadoop伪分布的配置
+  主要是配置四个xml文件，分别是`core-site.xml`, `hdfs-site.xml`, `mapred-site.xml`, `yarn-site.xml`
+  首先是`core-site.xml`
+  这边制定了temp的话，下面datanode和namenode的路径可以考虑省略，当然temp的地址需要一个不会关机清空的地址
+  ```xml
+  <configuration>
+      <property>
+          <name>fs.defaultFS</name>
+          <value>hdfs://localhost:9000</value>
+      </property>   
+      <property>
+          <name>hadoop.tmp.dir</name>
+          <value>path/to/temp</value>
+      </property>
+  </configuration>
+  ```
+  
+  其次是`hdfs-site.xml`
+  指定副本数(若上面没有写temp的地址的话这边需要制定namenode和datanode的地址)
+  ```xml
+  <configuration>
+      <property>
+          <name>dfs.replication</name>
+          <value>1</value>
+      </property>
+      <property>    
+          <name>dfs.namenode.name.dir</name>    
+          <value>/D:/Software/hadoop-3.2.0/data/dfs/namenode</value>    
+      </property>    
+      <property>    
+          <name>dfs.datanode.data.dir</name>    
+          <value>/D:/Software/hadoop-3.2.0/data/dfs/datanode</value>  
+      </property>
+  </configuration>
+  ```
+  设置完之后运行`bin/hdfs  namenode -format`对namenode进行格式化。
+  
+  然后是`mapred-site.xml`
+  指定运行在yarn上
+  ```xml
+  <configuration>
+     <property>
+         <name>mapreduce.framework.name</name>
+         <value>yarn</value>
+     </property>
+  </configuration>
+  ```
+  最后是`yarn-site.xml`
+  这下面两个属性不加的话可能会报错，一些莫名其妙的错误。
+  ```xml
+  <configuration>
+      <!-- Site specific YARN configuration properties -->
+      <property>
+          <name>yarn.nodemanager.aux-services</name>
+          <value>mapreduce_shuffle</value>
+      </property>
+      <property>
+          <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+          <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+      </property>
+  </configuration>
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

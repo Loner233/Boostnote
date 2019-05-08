@@ -1,0 +1,17 @@
+createdAt: "2019-05-07T09:58:16.641Z"
+updatedAt: "2019-05-07T10:02:12.343Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Windows下面使用hadoop非常非常坑的一点"
+tags: []
+content: '''
+  # Windows下面使用hadoop非常非常坑的一点
+  在启动yarn的时候，报错，提示某个文件夹的权限应该是rwx------，而实际上权限是rwxrwx---。
+  乍一看，像是权限给高了，然而windows上面改用户组权限实在是非常的难用，主要是没有chmod。
+  经过多上查找，这个问题是需要在Windows下提权来运行hadoop，但是windows下并没有sudo，所以近需要的是：
+  `Windows PowerShell(管理员)(A)`
+  这个点实在是太坑了，解决了一切就Done！！！！！！！！！！！！！！！
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

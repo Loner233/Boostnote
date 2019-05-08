@@ -1,0 +1,45 @@
+createdAt: "2019-05-07T05:34:29.801Z"
+updatedAt: "2019-05-07T05:40:02.412Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "TF中的tf.function这个装饰器"
+tags: []
+content: '''
+  ##  TF中的tf.function这个装饰器
+  （对于这个东西为什么要引进，有什么优点还需要进一步的了解）
+  由于引进了eager执行模式，且在tensorflow2.0的版本中默认是开启的，这个装饰器可以扩展函数的表现能力和部署能力
+  ```python
+  # A function is like an op
+  @tf.function
+  def add(a, b):
+    return a + b
+  
+  add(tf.ones([2, 2]), tf.ones([2, 2]))  #  [[2., 2.], [2., 2.]]
+  ```
+  
+  这个装饰器装饰的函数是可以拥有梯度的
+  ```python
+  # Functions have gradients
+  @tf.function
+  def add(a, b):
+    return a + b
+  
+  v = tf.Variable(1.0)
+  with tf.GradientTape() as tape:
+    result = add(v, 1.0)
+  tape.gradient(result, v)
+  ```
+  可以对function进行嵌套
+  ```python
+  # You can use functions inside functions
+  
+  @tf.function
+  def dense_layer(x, w, b):
+    return add(tf.matmul(x, w), b)
+  
+  dense_layer(tf.ones([3, 2]), tf.ones([2, 2]), tf.ones([2]))
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
