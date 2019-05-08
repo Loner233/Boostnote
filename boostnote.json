@@ -29,6 +29,11 @@
       "key": "56105c7777a26a536ee3",
       "color": "#E10051",
       "name": "BigData"
+    },
+    {
+      "key": "cab491cd31795b9833d0",
+      "color": "#3FD941",
+      "name": "数理统计"
     }
   ],
   "version": "1.0"
