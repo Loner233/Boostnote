@@ -1,5 +1,5 @@
 createdAt: "2019-03-29T13:07:17.583Z"
-updatedAt: "2019-03-29T13:13:37.371Z"
+updatedAt: "2019-05-08T05:06:53.644Z"
 type: "MARKDOWN_NOTE"
 folder: "8fc235f5f536710af3fe"
 title: "Scala基本操作"
@@ -22,4 +22,4 @@ content: '''
 '''
 linesHighlighted: []
 isStarred: false
-isTrashed: false
+isTrashed: true
