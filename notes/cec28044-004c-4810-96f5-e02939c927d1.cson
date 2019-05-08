@@ -1,5 +1,5 @@
 createdAt: "2019-05-07T05:34:29.801Z"
-updatedAt: "2019-05-08T05:12:45.030Z"
+updatedAt: "2019-05-08T06:17:15.974Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
 title: "TF中的tf.function这个装饰器"
@@ -49,7 +49,133 @@ content: '''
   ```
   
   
-  ## 多态性
+  ### 多态性
+  `tf.function`试图成为和python函数一样的通用函数。
+  我们可以通过个各种签名调用Python函数，并且Python通常会进行一些合理的操作。即使`tf.function`生成的底层tensorflow图表只适用于其签名中的特定类型，也会处理此类堕胎。
+  ```python
+  @tf.function
+  def add(a):
+    return a + a
+  
+  print("add 1",add(1))
+  print("add 1.1",add(1.1))
+  print("add string tensor",add(tf.constant("a")))
+  c = add.get_concrete_function(tf.TensorSpec(shape=None,dtype=tf.string))
+  c(a = tf.contant("a"))
+  
+  import  numpy as np
+  add(np.array(range(10))) # <tf.Tensor: id=18, shape=(10,), dtype=int32, numpy=array([ 0,  2,  4,  6,  8, 10, 12, 14, 16, 18])>
+  
+  ```
+  
+  
+  ##### 对于含有很多小操作的graph来说，函数的运行速度比即使代码更快
+  ```python
+  import timeit
+  conv_layer = tf.keras.layers.Conv2D(100,3)
+  @tf.function
+  def conv_fn(img):
+      return conv_layer(img)
+  
+  image = tf.zeros([1,200,200,100])
+  
+  #预热
+  conv_layer(image);conv_fn(image)
+  print("Eager conv:",timeit.timeit(lambda:conv_layer(image),number=10))    #0.22100364013392818
+  print("Function conv:",timeit.timeit(lambda:conv_fn(image),number=10))    #0.1691852252972481
+  ```
+  
+  
+  ### tf.function中的状态
+  在编写对相同变量具有多次读取和写入的代码时，数据流图表可能不会自然地idui操作的最初期望顺序进行编码。在tf.function中，由于我们要转换从Python追踪的代码，所以我们知道期望执行顺序。
+  ```python
+  a = tf.Variable(1.0)
+  b = tf.Variable(2.0)
+  
+  @tf.function
+  def f(x,y):
+      a.assign(y * b)
+      b.assign_add(x * a)
+      return a + b
+  f(1.0,2.0)
+  ```
+  
+  
+  ### 变量
+  使用和利用代码的期望执行顺序相同的方法大大简化了tf.function中变量创建和使用过程。
+  **多次立即调用变量，或者多次评估变量的输出张量，则我们使用变量编写出的代码行为可能有所不同**
+  ```python
+  @tf.function
+  def f(x):
+      v = tf.Variable(1.0)
+      v.assign_add(x)
+      return v
+  ```
+  以上代码执行的时候是会报错的，如果使用Eager模式的话会始终到“2”
+  
+  当然，并不是不能再tf.function中创建变量，只要能够验证该类变量即可
+  ```python
+  class C:pass;obj = C()
+  obj.v = None
+  
+  @tf.function
+  def g(x):
+      if obj.v is None:   #通过验证
+          obj.v = tf.Variable(1.0)
+      return obj.v.assign_add(x)
+  ```
+  
+  
+  变量初始化器可以依赖函数参数和其他变量值。可以用与生成控制依赖项相同的方法确定正确的初始化顺序
+  ```python
+  
+  state = []
+  
+  @tf.function
+  def fn(x):
+      if not state:
+          state.append(tf.Variable(2.0 * x))
+          state.append(tf.Variable(state[0] * 3.0))
+      return state[0] * x * state[1]
+  fn(tf.constant(1.0))
+  fn(tf.constant(2.0))
+  ```
+  ps:这么写真的是蛋疼，巨蛋疼！
+  
+  
+  ### 控制流和AutoGraph
+  AutoGraph库与tf.function实现完整集成，其将重写以来Tensors的条件语句和循环语句，以在图表中动态运行
+  ```python
+  @tf.function
+  def f(x):
+    while tf.reduce_sum(x) > 1:
+      tf.print(x)
+      x = tf.tanh(x)
+    return x
+  f(tf.random.uniform([10]))
+  ```
+  ps:阅读AutoGraph生成的代码,真的感觉是在读汇编！
+  ```python
+  def f(x):
+    while tf.reduce_sum(x) > 1:
+      tf.print(x)
+      x = tf.tanh(x)
+    return x
+  print(tf.autograph.to_code(f))
+  ```
+  
+  AutoGraph只影响Python中的基本控制流构造(if,for,while,break等)，并且在谓词为tensor的时候才会更改这些构造。同样，为了保证输出和断言能够动态的发生转换，要使用tf.print和tf.assert
+  ```python
+  @tf.function
+  def f(x):
+    for i in range(10):     #静态python循环，不会转换
+      do_stuff()
+    for i in tf.range(10):  #依赖于张良，会转换这个循环
+      do_stuff()
+  ```
+  
+  
+  
   
 '''
 linesHighlighted: []
