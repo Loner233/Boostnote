@@ -24,6 +24,11 @@
       "key": "3ed9013aac4316501eaf",
       "color": "#E8D252",
       "name": "python"
+    },
+    {
+      "key": "56105c7777a26a536ee3",
+      "color": "#E10051",
+      "name": "BigData"
     }
   ],
   "version": "1.0"
