@@ -1,0 +1,52 @@
+createdAt: "2019-05-09T05:32:02.795Z"
+updatedAt: "2019-05-09T06:17:23.184Z"
+type: "MARKDOWN_NOTE"
+folder: "7f0dca1b9cbf2e06c514"
+title: "Python中对源码的加密和混淆"
+tags: []
+content: '''
+  ### Python中对源码的加密和混淆
+  在python商业化开发中，全盘给出源码是一件非常不靠铺的事情，所以有时候就要对代码进行加密和混淆。
+  StackOverflow上面Jeff Mercado的观点一样
+  > You must use the right tool to do the right thing, and Python was not designed to be obfuscated.
+  
+  的确，Python不是一个设计的初衷就是简单易用，随时随地能修改该，有过Django开发经验的或者用过pyamg的都知道有时候不得不改一下这些第三方库的源码，改起来也很简单。
+  
+  不过还有有几种能力有限的方法能一定程度上对源码进行一定的保护
+  - 把源码编译成Byte Code
+  - 对源码进行一定的混淆[Oxyry Python Obfuscator - The most reliable python obfuscator in the world](http://pyob.oxyry.com/)
+  
+  ### 把源码编译成Byte Code
+  pyc文件是py文件编译后生成的字节码文件(byte code)。pyc文件经过python解释器最终会生成机器码运行。所以pyc文件是可以跨平台部署的，类似Java的.class文件。一般py文件改变后，都会重新生成pyc文件。
+  
+  myclass.py
+  ```python
+  class myclass():
+      @staticmethod
+      def test():
+          print("123123132")
+  ```
+   以下三够对上面的python编译成pyc
+  - `python -m myclass`
+  - `python -m py_compile myclass`
+  - `import py_compile;py_compile.compile("myclass.py")`
+     
+  会得到一个`__pycache__`文件夹，里面保存的就是`*.pyc`件
+  **将文件名改成myclass.pyc**，删掉原来的`myclass.py`
+  ```python
+  from myclass import myclass
+  myclass.test() # 输出123123132
+  ```
+  
+  #### 如果有多个python文件的话
+  针对一个目录下所有的py文件。python提供了一个模块叫做`compileall`，假设有个文件夹叫test，下面有test.py和test1.py两个文件
+  ```python
+  import compileall
+  compileall.compile_dir("test")
+  ```
+  `python -m compileall test`
+  会生成一个`__pycache__`,里面保存的是`test.cpython-37.pyc`、`test1.cpython-37.pyc`
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

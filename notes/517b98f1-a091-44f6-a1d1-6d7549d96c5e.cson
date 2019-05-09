@@ -1,0 +1,34 @@
+createdAt: "2019-05-09T06:43:11.248Z"
+updatedAt: "2019-05-09T07:19:18.585Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "这玩意儿不仅可以读图片，视频，声音都可以"
+tags: []
+content: '''
+  ### imageio的操作
+  ps:公司的电脑是windows的，正斜杠和反斜杠实在蛋疼，上次hadoop在windows上运行的权限问题已经使我非常头疼了
+  
+  ##### 图片的读取 #####
+  ```python
+  import imageio
+  img = imageio.imread(r"C:\\Users\\Dell\\Desktop\\img.jpg") # 这边前面r表示这个字符是不需要转义的，因为这是windows，地址间隔和转义符正好一样，坑！
+  img.shape() # (332, 500, 3)
+  type(img)   # imageio.core.util.Array
+  ```
+  
+  
+  ##### 写入图片 #####
+  ```python
+  import imageio
+  import numpy as np
+  img = np.random.random([150,150,3])*255
+  img = img.astype(np.uint8)  # 注意，这边uint8是非常关键的，如果是int的话，很有可能是负的，高于8位的也会有问题，非int的话，更加不行！
+  imageio.imwrite("test.png",img)
+  ```
+  
+  # 这玩意儿不仅可以读图片，视频，声音都可以
+  # 这东西还能读取屏幕，剪贴板，网络摄像头
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

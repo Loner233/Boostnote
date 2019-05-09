@@ -1,0 +1,28 @@
+createdAt: "2019-05-09T01:40:52.310Z"
+updatedAt: "2019-05-09T02:00:30.062Z"
+type: "MARKDOWN_NOTE"
+folder: "7f0dca1b9cbf2e06c514"
+title: "Python的抽象类（abc模块）"
+tags: []
+content: '''
+  ## Python的抽象类（abc模块）
+  ```python
+  import abc
+  class File(metaclass=abc.ABCMeta):
+      @abc.abstractmethod
+      def read(self):
+          pass
+  
+  class Text(File):
+      def read(self):
+          print("文本数据的读取方法")
+          
+  txt1 = Text()
+  txt1.read()
+  # txt2 = File()  #报错,符合要求，不能实例化抽象类
+  txt2.read()
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
