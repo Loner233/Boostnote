@@ -34,6 +34,16 @@
       "key": "cab491cd31795b9833d0",
       "color": "#3FD941",
       "name": "数理统计"
+    },
+    {
+      "key": "7f0dca1b9cbf2e06c514",
+      "color": "#E10051",
+      "name": "Python"
+    },
+    {
+      "key": "4221518f159f7df2f352",
+      "color": "#2BA5F7",
+      "name": "生活日常"
     }
   ],
   "version": "1.0"
