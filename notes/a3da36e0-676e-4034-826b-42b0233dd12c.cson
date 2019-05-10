@@ -1,0 +1,70 @@
+createdAt: "2019-05-10T04:32:57.095Z"
+updatedAt: "2019-05-10T04:49:03.794Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "通过h5py使用HDF5"
+tags: []
+content: '''
+  ##  通过h5py使用HDF5
+  >HDF（Hierarchical Data Format）指一种为存储和处理大容量科学数据设计的文件格式及相应库文件。HDF 最早由美国国家超级计算应用中心 NCSA 开发，目前在非盈利组织 HDF 小组维护下继续发展。当前流行的版本是 HDF5。HDF5 拥有一系列的优异特性，使其特别适合进行大量科学数据的存储和操作，如它支持非常多的数据类型，灵活，通用，跨平台，可扩展，高效的 I/O 性能，支持几乎无限量（高达 EB）的单文件存储等，
+  
+  
+  一个HDF5文件是存储两类对象的容器，这两类对象分别为：
+  - DataSet:类似数组的数据集合；
+  - Group：类似目录的容器，其中可以包含一个或多个DataSet及其他的group
+  
+  一个HDF5文件从一个个命名为“/”的Group开始，所有的DataSet和其他Group都包含在此Group下。***当操作HDF5文件时，如果没有显式指定Group的DataSet都是默认指“/”下的DataSet，另外类似相对文件路径的Group名字都是相对于“/”的** 
+  
+  HDF5文件的DataSet和Group都可以拥有描述性的元数据，称为Attribute。**用h5py操作HDF5，可以像目录一样用Group，像numpy一样用DataSet，像字典一样用属性**
+  
+  Demo：
+  ```python
+  import os
+  import numpy as np
+  import h5py
+  
+  file_name = 'test.hdf5'
+  f = h5py.File(file_name)
+  
+  # create a new group
+  f.create_group('/grp1') # or f.create_group('grp1')
+  # create a nother group inside grp1
+  f.create_group('/grp1/grp2') # or f.create_group('grp1/grp2')
+  
+  
+  # create a dataset in group "/"
+  data = np.arange(6).reshape(2, 3)
+  f.create_dataset('dset1', data=data) # or f.create_dataset('/dset1', data=data)
+  # create another dataset in group /grp1
+  f.create_dataset('grp1/dset2', data=data) # or f.create_dataset('/grp1/dset2', data=data)
+  
+  
+  # create an attribute of "/"
+  f.attrs['a'] = 1 # or f.attrs['/a'] = 1
+  # create an attribute of group "/grp1"
+  f['grp1'].attrs['b'] = 'xyz'
+  # create an attribute of dataset "/grp1/dset2"
+  f['grp1/dset2'].attrs['c'] = np.array([1, 2])
+  # close file
+  f.close()
+  
+  
+  
+  # open the existing test.hdf5 for read only
+  f = h5py.File(file_name, 'r')
+  # read dataset /dset1
+  print '/dset1 = %s' % f['dset1'][:]
+  # read dataset /grp1/dset2
+  print '/grp1/dset2 = %s' % f['/grp1/dset2'][:]
+  # get attributes
+  print f.attrs['a']
+  print f['grp1'].attrs['b']
+  print f['grp1/dset2'].attrs['c']
+  
+  # remove the created file
+  os.remove(file_name)
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
