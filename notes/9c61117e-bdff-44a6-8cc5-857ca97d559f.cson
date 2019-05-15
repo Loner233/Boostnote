@@ -1,0 +1,113 @@
+createdAt: "2019-05-15T07:14:59.951Z"
+updatedAt: "2019-05-15T07:45:17.698Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "Tensorflow 中的Dataset API"
+tags: []
+content: '''
+  # Tensorflow 中的Dataset API
+  
+  Dataset api是tensorflow 1.3引入的一个新的模块，主要用于数据的读取，构建输入数据的pipline
+  此前，只能通过两种方法读取数据
+  - 使用Placeholder读内存中的数据
+  - 使用queue读硬盘中的数据
+  
+  ### Dataset API同时支持从内存和硬盘的读取，相比之前的两种方法在于语法上比较简洁易懂，若要使用TF的eager模式，就必须使用Dataset API来进行读取数据
+  ```python
+  import tensorflow as tf
+  tf.data.Dataset
+  ```
+  ![https://pic2.zhimg.com/80/v2-f9f42cc5c00573f7baaa815795f1ce45_hd.jpg](:storage\\9c61117e-bdff-44a6-8cc5-857ca97d559f\\87cd7fb7.jpg)
+  
+  **Dataset可以看作是相同类型“元素”的有序列表。**实际使用时，单个“元素”可以是向量，也可以是字符串，图片，甚至是tuple或者dict
+  
+  ```python
+  import tensorflow as tf
+  import numpy as np
+  dataset = tf.data.Dataset.from_tensor_slices(np.array([1.0,2.0,3.0,4.0,5.0]))
+  ```
+  **非Eager模式下的读取**
+  ```python
+  iterator = dataset.make_one_shot_iterator()
+  one_element = iterator.get_next()
+  with tf.Session() as sess:
+      for i in range(5):
+          print(sess.run(one_element))
+  ```
+  
+  **由于将来是默认启用Eager模式**
+  ```python
+  for one_element in dataset:
+      print(one_element)
+  ```
+  
+  ## 从内存中创建更加复杂的Dataset
+  `from_tensor_slices()`真正的作用是切分传入Tensor的第一个维度，生成相应的dataset
+  ```python
+  dataset = tf.data.Dataset.from_tensor_slices(np.random.uniform(size=(5,2)))
+  ```
+  最后生成的dataset中共有5个元素，每个元素的形状是（2，），即每个元素是矩阵的一行。
+  
+  ### 实际使用中是可以传入python的字典或者是python的元组的
+  ```python
+  dataset = tf.data.Dataset.from_tensor_slices(
+      {
+      "a":np.array([1.0,2.0,3.0,4.0,5.0]),
+      "b":np.random.uniform(size=(5,2))
+      }
+  )
+  ```
+  dataset中每一个元素类似于{"a":1.0,"b":[0.8,0.1]}
+  
+  
+  利用tf.data.Dataset.from_tensor_slices创建每个元素是一个tuple的dataset也是可以的
+  ```python
+  dataset = tf.data.Dataset.from_tensor_slices(
+      (np.array([1.0,2.0,3.0,4.0,5.0]),np.random.uniform(size=(5,2)))
+  )
+  ```
+  dataset中每一个元素类似于(1.0,[0.8,0.1])
+  
+  #### 未完待续
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
