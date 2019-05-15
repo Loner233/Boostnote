@@ -1,0 +1,47 @@
+createdAt: "2019-05-15T07:45:20.493Z"
+updatedAt: "2019-05-15T07:54:58.734Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "Tensorflow 中的Dataset API（续）"
+tags: []
+content: '''
+  # Tensorflow 中的Dataset API（续）
+  ### Dataset支持一类特殊的操作：Transformation
+  一个Dataset通过Transformation变成一个新的Dataset。通常用来完成数据的变换，打乱，组成batch，生成epoch等。
+  
+  #### 常用的Transformation操作有：
+  - map
+  - batch
+  - shuffle
+  - repeat
+  
+  (1) **map**
+  map接受一个函数，dataset中的每个元素都会被当作这个函数的输入，并将函数返回值作为新的dataset
+  ```python
+  dataset = tf.data.Dataset.from_tenorr_slices(np.array([1.0,2.0,3.0,4.0,5.0]))
+  dataset = dataset.map(lambda x:x + 1)
+  ```
+  (2) **batch**
+  batch就是将多个元素组成batch
+  ```python
+  dataset = dataset.batch(32)
+  ```
+  
+  (3) **shuffle**
+  shuffle的功能为打乱dataset中的元素，它有一个参数buffersize，表示打乱是使用的buffer大小
+  ```python
+  dataset = dataset.shuffle(buffer_size=1000)
+  ```
+  
+  (4) **repeat**
+  repeat的功能就是将整个序列重复多次，主要用来形成epoch，比如repeat(5)就变成了5个epoch
+  ```python
+  dataset = dataset.repeat(5)
+  ```
+  **若不加参数，会无限重复下去，没有结束**
+  
+  ### Demo
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
