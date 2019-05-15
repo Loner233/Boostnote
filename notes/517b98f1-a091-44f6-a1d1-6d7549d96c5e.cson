@@ -1,8 +1,8 @@
 createdAt: "2019-05-09T06:43:11.248Z"
-updatedAt: "2019-05-09T07:19:18.585Z"
+updatedAt: "2019-05-15T07:15:19.008Z"
 type: "MARKDOWN_NOTE"
 folder: "3ed9013aac4316501eaf"
-title: "这玩意儿不仅可以读图片，视频，声音都可以"
+title: "imageio的操作"
 tags: []
 content: '''
   ### imageio的操作
@@ -26,8 +26,8 @@ content: '''
   imageio.imwrite("test.png",img)
   ```
   
-  # 这玩意儿不仅可以读图片，视频，声音都可以
-  # 这东西还能读取屏幕，剪贴板，网络摄像头
+  ### 这玩意儿不仅可以读图片，视频，声音都可以
+  ### 这东西还能读取屏幕，剪贴板，网络摄像头
 '''
 linesHighlighted: []
 isStarred: false
