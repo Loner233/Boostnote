@@ -1,5 +1,5 @@
 createdAt: "2019-03-31T09:13:27.451Z"
-updatedAt: "2019-03-31T09:29:17.952Z"
+updatedAt: "2019-05-08T13:44:36.116Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
 title: "TF变量管理"
@@ -72,6 +72,8 @@ content: '''
   ```
   变量管理器还可以通过名称轻松访问变量。灵活的使用变量管理器我们可以在复杂的神经网络结构中大大的提高代码的可读性。
 '''
-linesHighlighted: []
+linesHighlighted: [
+  42
+]
 isStarred: false
 isTrashed: false
