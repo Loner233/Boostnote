@@ -1,0 +1,93 @@
+createdAt: "2019-05-16T02:55:53.286Z"
+updatedAt: "2019-05-16T03:31:10.326Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "为什么说Python没有真正的多线程"
+tags: []
+content: '''
+  ##  为什么说Python没有真正的多线程
+  ```python
+  import time
+  import threading
+  def decrement(n):
+      while n > 0:
+          n -= 1
+  def single():
+      start = time.time()
+      decrement(100000000)
+      cost = time.time() - start
+      return cost
+  
+  def thd():
+      start = time.time()
+      t1 = threading.Thread(target=decrement, args=[50000000])
+      t2 = threading.Thread(target=decrement, args=[50000000])
+      t1.start()
+      t2.start()
+      t1.join()
+      t2.join()
+      cost = time.time() - start
+      return cost
+  
+  if __name__ == "__main__":
+      print(single())
+      print(thd())
+  ```
+  ### res：
+  4.5689613819122314
+  4.98799991607666
+  
+  以上代码的结果十分令人意外，为什么Python单线程跑得比多线程快？
+  原因不是单线程快，而是多线程慢，Python没有真正的多线程，这句话好多人都说过，为什么没有真正的多线程。
+  
+  原因在于GIL，Python的主流解释器Cpython中，有一把全局解释锁（Global Interpreter Lock），在解释器解释执行Python代码时，要先获得这把锁，所以任何时候可能只有一个线程在执行代码，其他线程想要获得CPU执行代码指令，就必须活得这把锁，若被占用，则该线程只能等待，直到占用该锁的线程释放锁才有执行代码指令的可能。
+  
+  由于GIL的存在，所以Python的线程只能交替执行，但是多线程又涉及到切换和锁等问题，所以不快反慢。
+  
+  ##### 什么时候GIL被释放呢？
+  当一个线程遇到I/O任务时，将释放GIL。计算密集型（CPU-bound）线程执行100次解释器的计步（ticks）时，也会释放GIL。可以通过`sys.setcheckinterval()`设置计步长度， `sys.getcheckinterval()`查看计步长度。
+  ```python
+  import time
+  import threading
+  def decrement(n):
+      while n > 0:
+          with open("%d"%n,"w") as f:
+              f.write("n")
+              f.close()
+          n -= 1
+  def single():
+      start = time.time()
+      decrement(10000)
+      cost = time.time() - start
+      return cost
+  
+  def thd():
+      start = time.time()
+      t1 = threading.Thread(target=decrement, args=[5000])
+      t2 = threading.Thread(target=decrement, args=[5000])
+      t1.start()
+      t2.start()
+      t1.join()
+      t2.join()
+      cost = time.time() - start
+      return cost
+  
+  if __name__ == "__main__":
+      print(single())
+      print(thd())
+  ```
+  res:
+  3.824963092803955
+  1.7060439586639404
+  如果多线程运行的是一个I/O密集型的任务，运行时间是会比单线程快的。（原因也就是上面GIL在什么时候会被释放）
+  
+  
+  
+  >那么把 GIL 去掉可行吗？
+  >还真有人这么干多，但是结果令人失望，在1999年Greg Stein 和Mark Hammond 两位哥们就创建了一个去掉 GIL 的 Python 分支，在所有可变数据结构上把 GIL 替换为更为细粒度的锁。然而，做过了基准测试之后，去掉GIL的 Python 在单线程条件下执行效率将近慢了2倍。
+  >Python之父表示：基于以上的考虑，去掉GIL没有太大的价值而不必花太多精力。
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
