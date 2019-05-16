@@ -1,0 +1,25 @@
+createdAt: "2019-05-16T09:18:30.945Z"
+updatedAt: "2019-05-16T09:19:29.455Z"
+type: "MARKDOWN_NOTE"
+folder: "7c4da5dc968083ef946a"
+title: "USER的问题"
+tags: []
+content: '''
+  ## USER的问题
+  
+  用户名和邮箱地址相当于你的身份标识，是本地Git客户端的一个变量，不会随着Git库而改变。
+  每次commit都会用用户名和邮箱纪录。
+  github的contributions跟你的邮箱是有关联的。
+  
+  
+  查看自己的用户名和邮箱地址：
+  $ git config user.name
+  $ git config user.email
+  
+  修改自己的用户名和邮箱地址：
+  $ git config --global user.name "xxx"
+  $ git config --global user.email "xxx"
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
