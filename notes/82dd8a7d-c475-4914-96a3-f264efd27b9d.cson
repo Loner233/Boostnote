@@ -1,0 +1,69 @@
+createdAt: "2019-05-17T02:34:17.021Z"
+updatedAt: "2019-05-17T02:44:15.209Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "python使用Celery（windows有个坑）"
+tags: []
+content: '''
+  # python使用Celery（windows有个坑）
+  Celery 是 Python 语言实现的分布式队列服务，除了支持即时任务，还支持定时任务，Celery 有5个核心角色。
+  - **task**     
+  任务(Task)就是你要做的事情
+  
+  
+  - **broker**
+  在Celery中它介于生产者和消费者之间经纪人，这个角色相当于数据结构中的队列
+  
+  
+  - **worker**
+  Worker 就是那个一直在后台执行任务的人
+  
+  
+  - **beat**
+  Beat 是一个定时任务调度器，它会根据配置定时将任务发送给 Broker，等待 Worker 来消费。
+  
+  
+  - **backend**
+  Backend 用于保存任务的执行结果
+  ![https://foofish.net/images/584bbf78e1783.png](:storage\\82dd8a7d-c475-4914-96a3-f264efd27b9d\\eaf2301f.png)
+  
+  
+  #### task.py
+  ```python
+  from celery import Celery
+  app = Celery('task',broker='redis://localhost:6379/0')
+  
+  @app.task
+  def send_mail(email):
+      print("send mail to ", email)
+      import time
+      time.sleep(5)
+      print("发送成功")
+      return "success"
+  ```
+  运行worker（其中`-P eventlet`是windows的一个坑，得先安装eventlet，`pip install eventlet`,貌似是因为4.x开始不支持windows平台，坑爹的windows)
+  `celery -A  task worrker -l info -P eventlet`
+  
+  #### user.py
+  ```python
+  from task import send_mail
+  def register():
+      import time
+      start = time.time()
+      print("1.插入记录到数据库")
+      print("2.Celery帮我发邮件")
+      send_mail.delay("xxx@gmail.com")
+      print("3.告诉用户注册成功")
+      print("耗时：%s秒"%(time.time() - start))
+  
+  if __name__ == "__main__":
+      register()
+  ```
+  
+  
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
