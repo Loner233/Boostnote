@@ -1,0 +1,103 @@
+createdAt: "2019-05-22T02:36:19.183Z"
+updatedAt: "2019-05-22T05:52:32.643Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "PyMC的使用"
+tags: []
+content: '''
+  ### PyMC的使用
+  > PyMC是一个由数学奇才们建立起来的关于贝叶斯分析的Python库
+  
+  #### PyMC的变量
+  - 父变量是会对其他变量有影响的变量
+  - 子变量是被其他夫变量影响的变量
+  ```python
+  import pymc as pm
+  
+  lambda_ = pm.Exponential("poisson_param",1)
+  data_generator = pm.Poisson("data_generator",lambda_)
+  data_plus_one = data_generator + 1
+  
+  lambda_.children
+  {<pymc.distributions.new_dist_class.<locals>.new_class 'data_generator' at 0x00000181931025F8>}
+  data_generator.parents
+  {'mu': <pymc.distributions.new_dist_class.<locals>.new_class 'poisson_param' at 0x0000018193132B38>}
+  ```
+  
+  
+  PyMC中有两种变量：
+  - 随机型变量
+  随机性变量是一种不确定的变量，即：即使获取了这个变量的所有父变量，他的取值仍然是随机的
+  每一个变量都有一个`value`属性，该属性会输出变量的当前取值。（PS：如果父变量发生改变的话，相应的子变量也会发生改变）
+  **初始化随机变量**
+  传入的第一个参数是一个字符串，表示该变量的名字，后面的参数随变量的类别不同而不同。
+  `some_variable = pm.DiscreteUniform("discrete_uni_var",0,4)`
+  随机变量有个`random()`方法，可以生成一个新的随机值（给定父变量的情况下）
+  如果要初始化多个变量，与其构建变量的数组，不如构建参数的数字。
+  同样的，与其为多个变量设置不同的名字，不如将所有变量打包成一个变量
+  ```python
+  beta_1 = pm.Uniform("beta_1",0,1)
+  beta_2 = pm.Uniform("beta_2",0,1)
+  betas = pm.Uniform("betas",0,1,size=N)
+  betas.value
+  betas[1].value
+  ```
+  
+  
+  
+  - 确定型变量
+  如果父变量确定，那么它不再随机。即：如果我们知道foo变量的所有夫变量，我们可以判断foo的取值为多少
+  有一个装饰器`pymc.deterministic`，其装饰的变量即为一个确定型变量。
+  ```python
+  @pm.deterministic
+  def some_deterministic_var(v1=v1,):
+      pass
+  ```
+  上述方法并不是唯一的方法，元素操作、加法、指数和类似的方式都可以产生确定行的变量
+  ```python
+  @pm.deterministic
+  def some_deterministic(stock=betas[1]):
+      return stock.value ** 2
+  ```
+  以上代码会抛出AttributeError异常，主要是`stock.value ** 2`,在这边只需要写成`stock ** 2`
+  
+  
+  
+  #### 给模型中加入观测值
+  ```python
+  from IPython.core.pylabtools import figsize
+  from matplotlib import pyplot as plt
+  import pymc as pm
+  figsize(12.5,4)
+  plt.rcParams["savefig.dpi"] = 300
+  plt.rcParams["figure.dpi"] = 300
+  lambda_1 = pm.Exponential("lambda_1",1)
+  sample = [lambda_1.random() for i in range(2000)]
+  plt.hist(sample,bins=70,density=True,histtype="stepfilled")
+  plt.title("Prior distribution for lambda_1")
+  plt.xlabel("Value")
+  plt.ylabel("Density")
+  plt.show()
+  ```
+  ![download.png](:storage\\56e6c410-41b3-4be0-8966-30f20e39f21d\\81ea5a5d.png)
+  
+  PyMC随机变量有个额外的关键字参数`observed`，它取值为一个布尔变量
+  作用是用来固定当前变量的取值，即使得变量取值不变。在创建变量的时候，需要赋予一个初值，这个值为希望加入的观测值，一般来说是个数组（用Numpy数组能提高速度）
+  ```python
+  import pymc as pm
+  import numpy as np
+  data = np.array([10, 5])
+  fixed_variable = pm.Poisson("fixed",1,value=data,observed=True)
+  print(fixed_variable.value)
+  fixed_variable.random()
+  print(fixed_variable.value)
+  ```
+  两次输出都是`Array([10, 5])`
+  
+  
+  #### 最后把所有变量到打包进pm.Model类
+  `pm.Model([obs,lambda_,lambda_1,lambda_2,tau])`
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
