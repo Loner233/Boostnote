@@ -1,5 +1,5 @@
 createdAt: "2019-03-16T01:45:46.844Z"
-updatedAt: "2019-03-16T01:45:53.276Z"
+updatedAt: "2019-05-30T02:18:06.608Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "垃圾回收"
@@ -10,4 +10,4 @@ content: '''
 '''
 linesHighlighted: []
 isStarred: false
-isTrashed: false
+isTrashed: true
