@@ -1,0 +1,21 @@
+createdAt: "2019-05-30T08:25:25.256Z"
+updatedAt: "2019-05-30T08:45:43.124Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "死都记不住的Python多线程"
+tags: []
+content: '''
+  ## 死都记不住的Python多线程
+  找个一个python线程池   简单的解决我死都记不住多线程的写法的问题
+  PS:有个多线程的实现，有空读读那个代码
+  `pip install threadpool  `
+  ```python
+  pool = ThreadPool(poolsize)  
+  requests = makeRequests(some_callable, list_of_args, callback)  
+  [pool.putRequest(req) for req in requests]  
+  pool.wait()  
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
