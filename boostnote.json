@@ -8,12 +8,12 @@
     {
       "key": "91678286fbe5c256d96d",
       "color": "#30D5C8",
-      "name": "tensorflow"
+      "name": "Tensorflow"
     },
     {
       "key": "3ed9013aac4316501eaf",
       "color": "#E8D252",
-      "name": "python"
+      "name": "Python"
     },
     {
       "key": "56105c7777a26a536ee3",
@@ -38,7 +38,7 @@
     {
       "key": "7c4da5dc968083ef946a",
       "color": "#E10051",
-      "name": "github"
+      "name": "GitHub"
     }
   ],
   "version": "1.0"
