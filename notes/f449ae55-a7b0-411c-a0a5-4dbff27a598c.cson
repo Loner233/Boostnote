@@ -1,0 +1,160 @@
+createdAt: "2019-06-11T01:10:24.671Z"
+updatedAt: "2019-06-11T03:02:04.401Z"
+type: "MARKDOWN_NOTE"
+folder: "9bf72d6668381ae56e61"
+title: "Iptable的用法"
+tags: []
+content: '''
+  ## Iptable的用法
+  `iptables`其实不是真正的防火墙，类似于一个客户端代理，用户通过iptables这个代理，将用户的安全设定执行到对应的安全框架中，这个安全框架才是真正的防火墙，这个框架的名字叫`newfilter`。
+  
+  > `netfilter`才是防火墙真正的安全框架，其位于内核额空间。
+  > `iptables`其实是一个命令行工具，位于用户空间，我们用这个工具操作真正的框架。
+  
+  `Netfilter`是linux操作系统的核心层内部的一个数据包处理模块，有以下功能：
+  - 网络地址转换
+  - 数据包内容修改
+  - 数据包过滤的防火墙功能
+  
+  ### 当启动了防火墙是，报文经过了如下的关卡
+  ![021217_0051_2.png](:storage/f449ae55-a7b0-411c-a0a5-4dbff27a598c/57ac883b.png)
+  
+  - 客户端到本机某进程的报文：PREROUTING --> INPUT
+  - 客户端经本机转发的报文：PREROUTING --> FORWARD --> POSTROUTING
+  - 本机的某进程发出报文：OUOTPUT --> POSTROUTING
+  
+  ### 什么是链
+  以上，当报文经过某个关卡的时候，就必须匹配这个关卡上的规则，同时，关卡上可能不止一条，也许有很多条规则，当这些规则串成一个链条的时候，就形成了“链”。
+  **当某个报文经过这个关卡时，都要将这个链上的所有规则匹配一边，如果有符合条件的规则，则执行规则对应的动作**
+  ![021217_0051_3.png](:storage/f449ae55-a7b0-411c-a0a5-4dbff27a598c/7ff546d9.png)
+  
+  ### 什么是表
+  一个链上有很多的规则，其中有些规则是比较接近的，比如都是进行端口过滤，那么便可以把相同的规则置于一张表中，iptables外围我们提供了如下的规则分类，及如下的几张“表”。
+  `filter`表：负责过滤功能，防火墙。内核模块：`iptables_filter`
+  `nat`表：网络地址转换功能。内核模块:`iptables_nat`
+  `mangle`表：拆解报文，作出修改并重新封装。内核模块：`iptables_mangle`
+  `raw`表，关闭nat表上启用的连接追踪机制。内核模块：`iptablees_raw`
+  
+  ### 表链关系
+  ![021217_0051_4.png](:storage/f449ae55-a7b0-411c-a0a5-4dbff27a598c/2fcc74a3.png)
+  
+  以上表示`prerouting`只有`nat`表、`raw`表、`mangle`表
+  即`prerouting`链只能拥有`nat`表、`raw`表、`mangle`表对应的规则。
+  
+  以下是关卡与表的对应：
+  - `PREROUTING`的规则可以存在于`nat`表、`raw`表、`mangle`表
+  - `INPUT`的规则可以存在于：`mangle`表、`filter`表、`nat`表
+  - `FORWARD`的规则可以存在于：`mangle`表、`filter`表
+  - `OUTPUT`的规则可以存在于：`nat`表、`raw`表、`mangle`表、`filter`表
+  - `POSTROUTING`的规则可以存在于：`mangle`表、`nat`表
+  
+  **实际使用过程中，往往是通过“表”作为操作入口，对规则进行定义**
+  raw     表中的规则可以被哪些链使用：PREROUTING，OUTPUT
+  mangle  表中的规则可以被哪些链使用：PREROUTING，INPUT，FORWARD，OUTPUT，POSTROUTING
+  nat     表中的规则可以被哪些链使用：PREROUTING，OUTPUT，POSTROUTING（centos7中还有INPUT，centos6中没有）
+  filter  表中的规则可以被哪些链使用：INPUT，FORWARD，OUTPUT
+  
+  ##### 优先级
+  当四张表处于同一条链时。执行的优先级如下：
+  `raw` -> `mangle` -> `nat` -> `filter`
+  
+  
+  
+  
+  ### 数据经过防火墙的流程
+  ![021217_0051_6.png](:storage/f449ae55-a7b0-411c-a0a5-4dbff27a598c/5f11680c.png)
+  
+  
+  ### 规则的匹配与动作
+  匹配条件分为基本匹配条件和扩展匹配条件
+  基本：源地址，目标地址，协议类型，网卡接口
+  扩展：源端口，目标端口
+  
+  
+  处理动作：
+  **ACCEPT**:允许数据包通过
+  **DROP**:直接丢弃数据包，不给任何回应信息
+  **REJECT**:拒绝数据包通过，必要时会给数据发送端一个响应信息。
+  **SNAT**:源地址转换，为了解决内网用户同一个公网地址上网的问题。
+  **MASQUERADE**:是SNAT的一种特殊形式，适用于动态的，临时会变的ip上。
+  **DNAT**:目标地址转换。
+  **REDIRECT**:在本机做端口映射。
+  **LOG**:在/var/log/meessages文件中记录日志信息，然后再把数据包传递给下一条规则，也就是说除了记录意外不对数据包做任何其他操作。
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+'''
+linesHighlighted: [
+  21
+  11
+  18
+  23
+]
+isStarred: false
+isTrashed: false
