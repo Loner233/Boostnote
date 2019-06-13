@@ -1,0 +1,23 @@
+createdAt: "2019-06-13T01:10:38.471Z"
+updatedAt: "2019-06-13T01:15:09.502Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "指定变量类型"
+tags: []
+content: '''
+  ### 指定变量类型
+  这是一个淡忘的知识，由于动态语言的特性，好久都没指定过python变量的类型
+  ```python
+  var:str = "我"
+  var:str = '0101'
+  var:int = 123
+  var:bool = True
+  var:list = [1,2,3]
+  var:tuple = (1,2,3)
+  var:dict = {1:2,2:3,3:4}
+  ```
+  #### 别忘了哈！
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
