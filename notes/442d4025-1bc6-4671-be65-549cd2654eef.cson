@@ -1,0 +1,26 @@
+createdAt: "2019-06-13T05:53:43.231Z"
+updatedAt: "2019-06-13T05:58:14.641Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "Numpy一些神奇的点"
+tags: []
+content: '''
+  ## Numpy一些神奇的点
+  - np.mat
+  ```python
+  np.mat("0.3 0;0 0.1")
+  # matrix([[0.3, 0. ],
+  #         [0. , 0.1]])
+  # mat的参数表示生成的就是这些数字组成的2×2的矩阵！！！
+  ```
+  
+  - numpy可以直接保存txt
+  ```python
+  a = np.array([1,2,3,4])
+  np.savetxt("data",a)
+  
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

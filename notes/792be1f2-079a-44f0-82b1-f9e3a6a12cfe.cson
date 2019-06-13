@@ -1,11 +1,11 @@
 createdAt: "2019-05-15T07:45:20.493Z"
-updatedAt: "2019-05-16T07:47:44.091Z"
+updatedAt: "2019-06-13T02:34:28.573Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
-title: "Tensorflow 中的Dataset API（续）"
+title: "Dataset API（续）"
 tags: []
 content: '''
-  # Tensorflow 中的Dataset API（续）
+  # Dataset API（续）
   ### Dataset支持一类特殊的操作：Transformation
   一个Dataset通过Transformation变成一个新的Dataset。通常用来完成数据的变换，打乱，组成batch，生成epoch等。
   

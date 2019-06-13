@@ -1,0 +1,26 @@
+createdAt: "2019-06-13T02:40:25.412Z"
+updatedAt: "2019-06-13T03:02:01.089Z"
+type: "MARKDOWN_NOTE"
+folder: "a6520603511b19c5f4bb"
+title: "公式语法"
+tags: []
+content: '''
+  ## 公式语法
+  ### 行内与独行
+  - 行内公式：将公式插入到本行内，符号：`$content$`,效果：$content$
+  - 独行公式：将公式插入到新的一行中，并且居中，符号：`$$content$$`,效果:
+  $$content$$
+  
+  
+  ### 上标、下标、组合
+  - 上标符号，符号：`^`,效果$x^2$
+  - 下标符号，符号：`_`,效果$x_2$
+  - 上下标，$x_2^2$
+  - 组合符号，符号：`{}`，效果$x_2^{(n)}$,如果不加`{}`,则$x_2^(n)$
+  
+  ### 汉字、字体与格式
+  #to-do
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
