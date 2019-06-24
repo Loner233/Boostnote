@@ -1,0 +1,21 @@
+createdAt: "2019-06-18T06:36:56.806Z"
+updatedAt: "2019-06-24T09:54:28.914Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "EM算法（续）"
+tags: []
+content: '''
+  ## EM算法（续）
+  面对一个含有隐变量的概率模型，目标是极大化观测数据（不完全数据）$Y$关于参数$\\theta$的对数似然函数，即最大化:
+  $$L(\\theta)=logP(Y|\\theta)=log\\sum_ZP(Y,Z|\\theta)=log(\\sum_ZP(Y|Z,\\theta)P(Z|\\theta))$$
+  
+  实际上，EM算法是通过迭代逐步近似极大化$L(\\theta)$的。
+  假设在第$i$次迭代后$\\theta$的估计值是$\\theta^{(i)}$。目标就是希望$\\theta$能够使得$L(\\theta)$增加，即$L(\\theta) > L(\\theta^{(i)})$,并且逐步达到最大值。
+  因此考虑两者的差：
+  $$L(\\theta) - L(\\theta^{(i)})=log(\\sum_ZP(Y|Z,\\theta)P(Z|\\theta)) - logP(Y|\\theta^{(i)})$$
+  利用Jensen不等式得其下届：
+  $$L(\\theta) - L(\\theta^{(i)}) = log(\\sum_ZP(Z|Y,\\theta^{(i)})\\frac{P(Y|Z,\\theta)P(Z|\\theta)}{P(Z|Y,\\theta^{(i)})})-logP(Y|\\theta^{(i)})$$
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
