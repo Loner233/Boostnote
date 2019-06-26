@@ -1,5 +1,5 @@
 createdAt: "2019-06-18T06:36:56.806Z"
-updatedAt: "2019-06-24T09:54:28.914Z"
+updatedAt: "2019-06-25T09:43:28.666Z"
 type: "MARKDOWN_NOTE"
 folder: "cab491cd31795b9833d0"
 title: "EM算法（续）"
@@ -13,8 +13,15 @@ content: '''
   假设在第$i$次迭代后$\\theta$的估计值是$\\theta^{(i)}$。目标就是希望$\\theta$能够使得$L(\\theta)$增加，即$L(\\theta) > L(\\theta^{(i)})$,并且逐步达到最大值。
   因此考虑两者的差：
   $$L(\\theta) - L(\\theta^{(i)})=log(\\sum_ZP(Y|Z,\\theta)P(Z|\\theta)) - logP(Y|\\theta^{(i)})$$
-  利用Jensen不等式得其下届：
+  利用Jensen不等式得其下界（这边主要用到的是$log\\sum_{j}\\lambda_jy_j\\geq\\sum_j\\lambda_jlogy_j$,其中$\\lambda_j\\geq0,\\sum_j\\lambda_j=1$)：
   $$L(\\theta) - L(\\theta^{(i)}) = log(\\sum_ZP(Z|Y,\\theta^{(i)})\\frac{P(Y|Z,\\theta)P(Z|\\theta)}{P(Z|Y,\\theta^{(i)})})-logP(Y|\\theta^{(i)})$$
+  $$\\geq\\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)P(Z|\\theta)}{P(Z|Y,\\theta^{(i)})}-logP(Y|\\theta^{(i)})$$
+  $$=\\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)}{P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)})}$$
+  
+  令
+  $$B(\\theta,\\theta^{(i)})=L(\\theta^{(i)}) + \\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)}{P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)})}$$
+  则
+  $$L(\\theta) \\geq B(\\theta,\\theta^{(i)})$$
 '''
 linesHighlighted: []
 isStarred: false
