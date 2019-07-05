@@ -1,0 +1,146 @@
+createdAt: "2019-07-05T06:25:46.714Z"
+updatedAt: "2019-07-05T07:32:33.620Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "tf.Example和TFRecord(续)"
+tags: []
+content: '''
+  # tf.Example和TFRecord(续)
+  ### 使用`tf.io`来针对TFRecord进行写操作
+  ```python
+  
+  def serialize_example(feature0, feature1, feature2, feature3):
+      """
+      Creates a tf.Example message ready to be written to a file.
+      """
+  
+      # Create a dictionary mapping the feature name to the tf.Example-compatible
+      # data type.
+  
+      feature = {
+          'feature0': _int64_feature(feature0),
+          'feature1': _int64_feature(feature1),
+          'feature2': _bytes_feature(feature2),
+          'feature3': _float_feature(feature3),
+      }
+  
+      # Create a Features message using tf.train.Example.
+  
+      example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+      return example_proto.SerializeToString()
+  
+  def _bytes_feature(value):
+      """Returns a bytes_list from a string / byte."""
+      return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+  
+  def _float_feature(value):
+      """Returns a float_list from a float / double."""
+      return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+  
+  def _int64_feature(value):
+      """Returns an int64_list from a bool / enum / int / uint."""
+      return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+    
+  # the number of observations in the dataset
+  n_observations = int(1e4)
+  
+  # boolean feature, encoded as False or True
+  feature0 = np.random.choice([False, True], n_observations)
+  
+  # integer feature, random from 0 .. 4
+  feature1 = np.random.randint(0, 5, n_observations)
+  
+  # string feature
+  strings = np.array([b'cat', b'dog', b'chicken', b'horse', b'goat'])
+  feature2 = strings[feature1]
+  
+  # float feature, from a standard normal distribution
+  feature3 = np.random.randn(n_observations)
+  
+  
+  # Write the `tf.Example` observations to the file.
+  with tf.io.TFRecordWriter("test.tfrecord") as writer: #注意，这边在tf2中已经改为tf.io而不是tf.python_io
+      for i in range(n_observations):
+          example = serialize_example(feature0[i], feature1[i], feature2[i], feature3[i])
+          writer.write(example)
+  ```
+  **暂时没找到如何通过io来进行读取，难道2.0里面只能通过`tf.data.TFRecordDataset`？？？**
+  
+  
+  ### 将图片写入TFRecord
+  ```python
+  
+  def _bytes_feature(value):
+      """Returns a bytes_list from a string / byte."""
+      return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+  
+  def _float_feature(value):
+      """Returns a float_list from a float / double."""
+      return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+  
+  def _int64_feature(value):
+      """Returns an int64_list from a bool / enum / int / uint."""
+      return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+  
+  cat_in_snow  = tf.keras.utils.get_file('320px-Felis_catus-cat_on_snow.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/320px-Felis_catus-cat_on_snow.jpg')
+  williamsburg_bridge = tf.keras.utils.get_file('194px-New_East_River_Bridge_from_Brooklyn_det.4a09796u.jpg','https://storage.googleapis.com/download.tensorflow.org/example_images/194px-New_East_River_Bridge_from_Brooklyn_det.4a09796u.jpg')
+  
+  image_labels = {
+      cat_in_snow : 0,
+      williamsburg_bridge : 1,
+  }
+  
+  image_string = open(cat_in_snow, 'rb').read()
+  
+  label = image_labels[cat_in_snow]
+  
+  # Create a dictionary with features that may be relevant.
+  def image_example(image_string, label):
+      image_shape = tf.image.decode_jpeg(image_string).shape
+  
+      feature = {
+          'height': _int64_feature(image_shape[0]),
+          'width': _int64_feature(image_shape[1]),
+          'depth': _int64_feature(image_shape[2]),
+          'label': _int64_feature(label),
+          'image_raw': _bytes_feature(image_string),
+      }
+  
+      return tf.train.Example(features=tf.train.Features(feature=feature))
+      
+  with tf.python_io.TFRecordWriter('images.tfrecords') as writer:
+      for filename, label in image_labels.items():
+          image_string = open(filename, 'rb').read()
+          tf_example = image_example(image_string, label)
+          writer.write(tf_example.SerializeToString())
+  ```
+  
+  - 读
+  ```python
+  raw_image_dataset = tf.data.TFRecordDataset('images.tfrecords')
+  
+  # Create a dictionary describing the features.
+  image_feature_description = {
+      'height': tf.FixedLenFeature([], tf.int64),
+      'width': tf.FixedLenFeature([], tf.int64),
+      'depth': tf.FixedLenFeature([], tf.int64),
+      'label': tf.FixedLenFeature([], tf.int64),
+      'image_raw': tf.FixedLenFeature([], tf.string),
+  }
+  
+  def _parse_image_function(example_proto):
+      # Parse the input tf.Example proto using the dictionary above.
+      return tf.parse_single_example(example_proto, image_feature_description)
+  
+  parsed_image_dataset = raw_image_dataset.map(_parse_image_function)
+  for image_features in parsed_image_dataset:
+      image_raw = image_features['image_raw'].numpy()
+  
+  ```
+  不知为什么，全是Demo代码
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

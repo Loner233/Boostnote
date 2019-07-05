@@ -1,14 +1,129 @@
 createdAt: "2019-06-13T02:35:19.801Z"
-updatedAt: "2019-06-17T01:56:44.908Z"
+updatedAt: "2019-07-05T07:14:23.916Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
-title: "TFRecord"
+title: "tf.Example和TFRecord"
 tags: []
 content: '''
-  ### TFRecord
+  # tf.Example和TFRecord
+  ## 首先来谈谈`tf.Example`
+  实际上`tf.Example`就是一个`{"string":tf.train.Feature}`的映射
+  `tf.train.Feature`消息类型可以接受以下三种类型中的一中
   
+  -  `tf.train.BytesList`(可以包裹下面的类型)
+      - `string`
+      - `byte`
+  -  `tf.train.FloatList`(可以包裹下面的类型)
+      - `float(float32)`
+      - `double(float64)`
+  -  `tf.train.Int64List`(可以包裹下面的类型)
+      - `bool`
+      - `enum`
+      - `int32`
+      - `uint32`
+      - `int64`
+      - `uint64`
   
+  >为了将标准的TensorFlow类型转换成`tf.Example`可用的`tf.train.Feature`，可以使用一下的方法
+  ```python
+  # The following functions can be used to convert a value to a type compatible
+  # with tf.Example.
+  def _bytes_feature(value):
+      """Returns a bytes_list from a string / byte."""
+      return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+  
+  def _float_feature(value):
+      """Returns a float_list from a float / double."""
+      return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+  
+  def _int64_feature(value):
+      """Returns an int64_list from a bool / enum / int / uint."""
+      return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+  ```
+  **所有的消息都能通过使用`.SerializeToString`序列化成`binary-string`**
+  ```python
+  feaure = _float_feature(np.exp(1))
+  feature.SerializeToString()
+  ```
+  #### 创建一个`tf.Example`消息
+  其实主要就是三个步骤
+  - 将每一value转换成`tf.train.Feature`，其包含三种兼容的类型，可以使用上面的函数进行转换
+  - 创建一个映射（dict），具体就是string类型的‘feature name’：`tf.train.Feature`
+  - 把上面的映射（dict）转换成`tf.train.Features`,然后再传入`tf.train.Example`
+  
+  ```python
+  def serialize_example(feature0, feature1, feature2, feature3):
+      feature = {
+          'feature0': _int64_feature(feature0),
+          'feature1': _int64_feature(feature1),
+          'feature2': _bytes_feature(feature2),
+          'feature3': _float_feature(feature3),
+      }
+  
+      example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+      return example_proto.SerializeToString()
+  example_observation = []
+  serialized_example = serialize_example(False, 4, b'goat', 0.9876)
+  example_proto = tf.train.Example.FromString(serialized_example)
+  example_proto
+  ```
+  
+  ## 再入`tf.Record`
+  > A TFRecord file contains a sequence of records. The file can only be read sequentially.
+  
+  TFRecord文件包含一串records，这个文件只能被按序读取。
+  每一个`record`包含一个byte-string作为数据载荷、数据长度和一个CRC32C哈希（用于完整性检查）
+  每个record的格式：
+  ```
+  uint64 length
+  uint32 masked_crc32_of_length
+  byte   data[length]
+  uint32 masked_crc32_of_data
+  ```
+  **Note：并不是一定要在TFRecord中使用`tf.Example`,`tf.Example`只是一个用来将dict序列化成byte-strings的方法**
+  
+  ### TFRecord使用tf.data（tf.data见tf.data笔记)
+  `tf.data.Dataset.map`有一个`map`方法，只不过这个方法一定是只能用于TensorFlow的图模式—— 他必须操作和返回`tf.Tensors`，一个不使用Tensor的函数，可以使用`tf.py_function`获得兼容性。
+  ```python
+  def tf_serialize_example(f0,f1,f2,f3):
+      tf_string = tf.py_function(
+          serialize_example_pyfunction,
+          (f0,f1,f2,f3),  # pass these args to the above function.
+          tf.string)      # the return type is tf.string
+          return tf.reshape(tf_string, ()) # The result is a scalar
+          
+  serialized_features_dataset = features_dataset.map(tf_serialize_example)   #这样才能在map中使用个这个兼容了Tensor的函数
+  ```
+  ### 读写TFRecord文件：
+  - 写
+  ```python
+  filename = 'test.tfrecord'
+  writer = tf.data.experimental.TFRecordWriter(filename)
+  writer.write(serialized_features_dataset)
+  ```
+  - 读（使用`tf.data.TFRecordDataset`)
+  ```python
+  filenames = [filename]
+  raw_dataset = tf.data.TFRecordDataset(filenames)
+  # 这个feature_description必须存在，因为dataset使用图执行，需要这个函数来构建shape和type签名
+  feature_description = {
+      'feature0': tf.FixedLenFeature([], tf.int64, default_value=0),
+      'feature1': tf.FixedLenFeature([], tf.int64, default_value=0),
+      'feature2': tf.FixedLenFeature([], tf.string, default_value=''),
+      'feature3': tf.FixedLenFeature([], tf.float32, default_value=0.0),
+  }
+  
+  def _parse_function(example_proto):
+    # Parse the input tf.Example proto using the dictionary above.
+    return tf.parse_single_example(example_proto, feature_description)
+  parsed_dataset = raw_dataset.map(_parse_function)
+  for parsed_record in parsed_dataset.take(10):
+    print(repr(parsed_record))
+  ```
+  to be continue...
 '''
-linesHighlighted: []
+linesHighlighted: [
+  43
+]
 isStarred: false
 isTrashed: false

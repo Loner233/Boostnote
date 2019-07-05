@@ -1,0 +1,63 @@
+createdAt: "2019-07-05T02:54:55.643Z"
+updatedAt: "2019-07-05T03:20:45.292Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "Custom layers"
+tags: []
+content: '''
+  # Custom layers
+  正常情况下使用tf的层
+  ```python
+  import tensorflow as tf                                                             
+  tf.keras.layers.Dense(10,input_shape=(None,5))                                      
+  layer(tf.zeros([10,5]))                                                             
+  ```
+  给上面一点点解释，怕我到时候又忘了，针对上面简单的说明
+  首先`tf.zeros([10,5])`表示生成10行数据，每行数据包含5个features
+  layer层接收`(None,5)`即表示接收无限多的有5阶单维向量的input,同时其output为10
+  
+  显然对于layer来说应该有5×10个权重和10个偏置。
+  ```python
+  layer.variables
+  # 这边为什么是下面这些数呢？！   因为网络的初始化啊！！！！！！！！
+  #[<tf.Variable 'dense_2/kernel:0' shape=(5, 10) dtype=float32, numpy=
+  #array([[ 0.16815901, -0.42236146,  0.01600462,  0.35829175, -0.14875004,
+  #          0.32827777,  0.01659358, -0.10395145, -0.15604219,  0.6164351 ],
+  #        [ 0.12771386,  0.0011481 ,  0.16179764, -0.31493324,  0.13179648,
+  #         -0.04660714, -0.14079711, -0.2613215 , -0.3772434 ,  0.54153293],
+  #        [ 0.5625127 ,  0.48738772, -0.18992814, -0.4951418 , -0.0427869 ,
+  #          0.09413797, -0.33710167, -0.2575034 , -0.27624044,  0.62906545],
+  #        [-0.24610749, -0.5890849 , -0.3197662 ,  0.06651473,  0.29999757,
+  #         -0.47144634, -0.20869958, -0.10285115,  0.42665297, -0.5756285 ],
+  #        [ 0.5474338 ,  0.20964968,  0.17054808, -0.5745614 ,  0.06037462,
+  #         -0.02877146, -0.48847768, -0.5623633 ,  0.46842843, -0.53705364]],
+  #       dtype=float32)>,
+  # <tf.Variable 'dense_2/bias:0' shape=(10,) dtype=float32, numpy=array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0.], dtype=float32)>]
+  ```
+  ## 实现自定义的层
+  - 继承`tf.keras.Layer`
+  - 实现`__init__` 这里可以初始化一些独立与输入的参数
+  - 实现`build`和`call` 使用`build`创建变量的好处在于能够基于这一层的输入来创造最新的变量，也就是说在`__init__`创建变量必须显式地指明变量的shape
+  ```python
+  class MyDenseLayer(tf.keras.layers.Layer):
+      def __init__(self, num_outputs):
+          super(MyDenseLayer, self).__init__()
+          self.num_outputs = num_outputs
+  
+      def build(self, input_shape):
+          self.kernel = self.add_variable("kernel",shape=[int(input_shape[-1]),self.num_outputs])
+          self.bias = self.add_variable("bias",shape=[self.num_outputs])
+          
+      def call(self, input):
+          return tf.matmul(input, self.kernel) + self.bias
+  
+  layer = MyDenseLayer(10)
+  print(layer(tf.zeros([10, 5])))
+  print(layer.trainable_variables)
+  ```
+  
+  上述仅为最简单的例子
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

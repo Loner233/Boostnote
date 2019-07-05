@@ -1,12 +1,11 @@
 createdAt: "2019-05-15T07:14:59.951Z"
-updatedAt: "2019-06-13T02:34:16.974Z"
+updatedAt: "2019-07-05T06:25:24.930Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
 title: "Dataset API"
 tags: []
 content: '''
-  Dataset API
-  
+  # Dataset API
   Dataset api是tensorflow 1.3引入的一个新的模块，主要用于数据的读取，构建输入数据的pipline
   此前，只能通过两种方法读取数据
   - 使用Placeholder读内存中的数据

@@ -1,11 +1,11 @@
 createdAt: "2019-05-07T05:34:29.801Z"
-updatedAt: "2019-06-13T02:34:37.694Z"
+updatedAt: "2019-07-05T03:21:30.858Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
-title: "tf.function这个装饰器"
+title: "tf.function"
 tags: []
 content: '''
-  ##  tf.function这个装饰器
+  ##  tf.function
   （对于这个东西为什么要引进，有什么优点还需要进一步的了解）补充：TF公众号正好推了这么一篇文章，正好借此再来学习一下
   由于引进了eager执行模式，且在tensorflow2.0的版本中默认是开启的，这个装饰器可以扩展函数的表现能力和部署能力
   
