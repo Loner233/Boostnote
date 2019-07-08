@@ -1,0 +1,53 @@
+createdAt: "2019-07-08T03:02:58.977Z"
+updatedAt: "2019-07-08T03:39:25.660Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "LSTM"
+tags: [
+  "神经网络"
+]
+content: '''
+  # LSTM 
+  ### 普通RNN
+  
+  ![https://pic4.zhimg.com/80/v2-f716c816d46792b867a6815c278f11cb_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/bc047e94.jpg)
+  
+  其中：
+  - $x$表示当前状态的数据输入
+  - $h$表示接受到的上一个节点的输入
+  - $y$表示当前节点下的输出
+  - $h^{'}$ 表示传递到下一个节点的输出
+  
+  ### long short term memory，LSTM
+  
+  ![https://pic4.zhimg.com/80/v2-e4f9851cad426dfe4ab1c76209546827_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/3e93a79e.jpg)
+  
+  显然,  LSTM有两个传递状态，一个$c^t$(cell state)和一个$h^t$（hidden state）   (tip:RNN中的$h^t$想对于LSTM中的$c^t$)
+  
+  首先更具LSTM的当前输入$x^t$和上一个状态床地下来的$h^{t-1}$拼接训练得到四个状态。
+  
+  ![https://pic4.zhimg.com/80/v2-15c5eb554f843ec492579c6d87e1497b_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/daf9116d.jpg)
+  ![https://pic1.zhimg.com/80/v2-d044fd0087e1df5d2a1089b441db9970_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/1d49121e.jpg)
+  
+  其中
+  - $z^f,z^i,z^o$是拼接向量乘以权重矩阵之后，在通过激活函数$sigmoid$转换成0-1之间的数值，来作文一种门控信号
+  - $z$则是将结果通过一个$tanh$激活函数转换成-1到1之间的值,这里用tanh是因为将其作为输入数据，而不是门控信号。
+  
+  ###### 上述四个状态在LSTM单元内部的使用
+  
+  ![https://pic2.zhimg.com/80/v2-556c74f0e025a47fea05dc0f76ea775d_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/bf2c1637.jpg)
+  
+  - $\\odot$ 是Hadamard Product，也就是操作矩阵中对应的元素相乘，因此要求两个相乘矩阵是同型的。 
+  - $\\oplus$ 则代表进行矩阵加法。
+  
+  LSTM内部主要有三个阶段：
+  - 忘记阶段
+  这个阶段主要是针对上一个节点的输入来进行选择性忘记。（记住重要的，忘记不重要的），主要通过$z^f$来作为忘记门控
+  - 选择记忆阶段
+  这个阶段将对输入有选择性的进行记忆，主要是针对输入$x^t$进行选择性记忆。主要通过$z^i$进行控制
+  - 输出阶段
+  这个阶段决定那些将会被当成当前状态的输出。主要是$z^o$来进行控制，同时还会对上一阶段得到的$c^o$进行缩放
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

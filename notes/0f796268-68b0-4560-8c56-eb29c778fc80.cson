@@ -1,0 +1,19 @@
+createdAt: "2019-07-08T02:34:59.760Z"
+updatedAt: "2019-07-08T02:36:14.533Z"
+type: "MARKDOWN_NOTE"
+folder: "7c4da5dc968083ef946a"
+title: "Git的三种状态"
+tags: []
+content: '''
+  # Git的三种状态
+  Git 有三种状态，你的文件可能处于其中之一：已提交（committed）、已修改（modified）和已暂存（staged）。 
+  
+  - 已提交表示数据已经安全的保存在本地数据库中。 
+  - 已修改表示修改了文件，但还没保存到数据库中。 
+  - 已暂存表示对一个已修改文件的当前版本做了标记，使之包含在下次提交的快照中。
+  
+  ![areas.png](:storage/0f796268-68b0-4560-8c56-eb29c778fc80/2fb1db89.png)
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
