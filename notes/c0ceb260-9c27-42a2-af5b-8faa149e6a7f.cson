@@ -1,5 +1,5 @@
 createdAt: "2019-06-18T06:36:56.806Z"
-updatedAt: "2019-06-25T09:43:28.666Z"
+updatedAt: "2019-07-12T08:25:35.670Z"
 type: "MARKDOWN_NOTE"
 folder: "cab491cd31795b9833d0"
 title: "EM算法（续）"
@@ -18,10 +18,39 @@ content: '''
   $$\\geq\\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)P(Z|\\theta)}{P(Z|Y,\\theta^{(i)})}-logP(Y|\\theta^{(i)})$$
   $$=\\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)}{P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)})}$$
   
+  
+  > 上式有个非常令人困惑的一点,即$-logP(Y|\\theta^{(i)})$为什么能够直接提到$\\sum$里面去,其实这边有个非常隐晦的东西即:
+  > $$\\sum_{i=1}^n\\frac{1}{n}*C = C$$
+  > 这边$-logP(Y|\\theta^{(i)})$对于$Z$来说就相当于常数C,而前面的$\\sum_ZP(Z|Y,\\theta^{(i)})$的值应该就是1,所以李航这个式子没问题!!
+  
   令
   $$B(\\theta,\\theta^{(i)})=L(\\theta^{(i)}) + \\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)}{P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)})}$$
   则
   $$L(\\theta) \\geq B(\\theta,\\theta^{(i)})$$
+  显然,$L(\\theta)$的下界即为$B(\\theta,\\theta^{(i)})$,并且在$\\theta=\\theta^{(i)}$时,$L(\\theta^{(i)})=B(\\theta^{(i)},\\theta^{(i)})$
+  
+  **所以如果想要原对数似然函数越来越大,只需要其下届越来越大**,即选择一个$\\theta^{(i+1)}$使得$B(\\theta,\\theta^{(i)})$达到极大
+  $$\\theta^{(i+1)} = arg\\max_{\\theta}B(\\theta,\\theta^{(i)})$$
+  **综上所述:**
+  $$\\theta^{(i+1)} = arg\\max_{\\theta}(L(\\theta^{(i)} + \\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)P(Z|\\theta)}{P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)})})$$
+  其中,显然$L(\\theta^{(i)})$是一个常数,所以不用管它
+  同时,
+  $$\\sum_ZP(Z|Y,\\theta^{(i)})log\\frac{P(Y|Z,\\theta)P(Z|\\theta)}{P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)})}=\\sum_Z(P(Z|Y,\\theta^{(i)})*log(P(Y|Z,\\theta)P(Z|\\theta))-P(Z|Y,\\theta^{(i)})*log(P(Z|Y,\\theta^{(i)})P(Y|\\theta^{(i)}))])$$
+  显然后面一项也都是$\\theta^{(i)}$,所也也可以用管它
+  故,下面仅需要继续要极大化后面一项,即:
+  $$\\theta^{(i+1)} = arg\\max_{\\theta}(\\sum_ZP(Z|Y,\\theta^{(i)})log(P(Y|Z,\\theta)P(Z|\\theta)))$$
+  根据贝叶斯定理,上式可转化为
+  $$\\theta^{(i+1)} = arg\\max_{\\theta}(\\sum_ZP(Z|Y,\\theta^{(i)})logP(Y,Z|\\theta))$$
+  根据前一部分对$Q(\\theta,\\theta^{(i)})$的定义,即:$Q(\\theta,\\theta^{(i)})=\\sum_ZlogP(Y,Z|\\theta)P(Z|Y,\\theta^{(i)})=\\sum_ZP(Z|Y,\\theta^{(i)})logP(Y,Z|\\theta)$$$
+  所以最终,极大化问题可以变为:
+  $$\\theta^{(i+1)}=arg\\max_{\\theta}Q(\\theta,\\theta^{(i)})$$
+  其中根据$Q(\\theta,\\theta^{(i)})$的定义可知,其实就是极大化
+  完全数据的对数似然函数$logP(Y,Z|\\theta)$关于在给定观测数据$Y$和当前参数$\\theta^{(i)}$下对未观测数据$Z$的条件概率分布$P(Z|Y,\\theta^{(i)})$的期望!!!!!!!!!
+  
+  
+  
+  
+  终于弄完了,基本有个清晰的了解了,等用到实际应用的时候再总结下tips吧!!!!!!!!!
 '''
 linesHighlighted: []
 isStarred: false
