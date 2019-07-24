@@ -1,0 +1,76 @@
+createdAt: "2019-07-23T07:00:50.790Z"
+updatedAt: "2019-07-24T06:40:09.238Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala复习-Classes"
+tags: []
+content: '''
+  # Scala复习-Classes
+  ** 类名首字母大写，使用大坨峰
+  ```scala
+  class User
+  val user1 = new User
+  ```
+  `User`中没有定义构造器，所以就有了一个不需要输入参数的默认构造器
+  通常是要个构造器和类主体的，如下
+  ```scala
+  class Point(var x: Int, var y: Int) {
+  
+    def move(dx: Int, dy: Int): Unit = {
+      x = x + dx
+      y = y + dy
+    }
+  
+    override def toString: String =
+      s"($x, $y)"
+  }
+  
+  val point1 = new Point(2, 3)
+  point1.x  // 2
+  println(point1)  // prints (2, 3)
+  ```
+  有别于其他语言，主要的构造器实在类签名上面`(var x:Int,var y:Int)`
+  
+  ### 构造器
+  构造器可以提供参数的缺省值
+  ```scala
+  class Point(var x: Int = 0, var y: Int = 0)
+  val origin = new Point  // x and y are both set to 0
+  val point1 = new Point(1)
+  println(point1.x)  // prints 1
+  
+  //构造器是从左向右读取值的，所以要跳过一个的话就得显式的表示
+  class Point(var x: Int = 0, var y: Int = 0)
+  val point2 = new Point(y=2)
+  println(point2.y)  // prints 2
+  ```
+  
+  ### 私有成员和Getter/Setter
+  ```scala
+  class Point {
+    private var _x = 0
+    private var _y = 0
+    private val bound = 100
+  
+    def x = _x
+    def x_= (newValue: Int): Unit = {
+      if (newValue < bound) _x = newValue else printWarning
+    }
+  
+    def y = _y
+    def y_= (newValue: Int): Unit = {
+      if (newValue < bound) _y = newValue else printWarning
+    }
+  
+    private def printWarning = println("WARNING: Out of bounds")
+  }
+  
+  val point1 = new Point
+  point1.x = 99
+  point1.y = 101 // prints the warning
+  ```
+  tips:想这边`y_=`作为`setter`的名称，那么在编译完之后，直接可以像正常赋值一样调用`setter`来给`_y`复制
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

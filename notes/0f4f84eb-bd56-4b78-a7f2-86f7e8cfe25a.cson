@@ -1,0 +1,16 @@
+createdAt: "2019-07-18T05:08:13.858Z"
+updatedAt: "2019-07-18T06:00:12.363Z"
+type: "MARKDOWN_NOTE"
+folder: "9bf72d6668381ae56e61"
+title: "使用LETSENCRYPT来配置https和http2"
+tags: []
+content: '''
+  ## 使用LETSENCRYPT来配置https和http2
+  openssl genrsa -out icatchtek.key 2048
+  openssl req -new -key icatchtek.key -out icatchtek.csr
+  openssl x509 -req -in icatchtek.csr -extensions v3_ca -signkey icatchtek.key -out icatchtek.crt
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

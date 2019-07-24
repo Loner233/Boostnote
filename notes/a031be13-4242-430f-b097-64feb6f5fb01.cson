@@ -1,9 +1,11 @@
 createdAt: "2019-03-17T15:30:27.302Z"
-updatedAt: "2019-03-24T07:34:26.881Z"
+updatedAt: "2019-07-23T06:01:57.655Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "Java类型信息"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ### Java类型信息
   在Java中有两种方法用来在运行时识别类和对象的信息，一种是传统的RTTI，另一种是反射。

@@ -3,7 +3,7 @@
     {
       "key": "7ad16a328420ce2c1cef",
       "color": "#E10051",
-      "name": "Java"
+      "name": "复习"
     },
     {
       "key": "91678286fbe5c256d96d",
@@ -54,6 +54,11 @@
       "key": "199620c1649871a0589e",
       "color": "#E8D252",
       "name": "JavaScript"
+    },
+    {
+      "key": "599c41a20ca2d25d4c17",
+      "color": "#E10051",
+      "name": "web"
     }
   ],
   "version": "1.0"

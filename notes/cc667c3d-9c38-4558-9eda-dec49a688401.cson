@@ -1,0 +1,114 @@
+createdAt: "2019-07-24T02:46:21.234Z"
+updatedAt: "2019-07-24T05:39:16.521Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala型变"
+tags: []
+content: '''
+  # Scala型变
+  Scala支持泛型类的类型参数的型变注释，允许是协变，逆变或者在没有使用注释的情况下是不变的。
+  
+  ### 协变
+  使用注释 `+A`，可以使一个泛型类的类型参数 `A` 成为协变。
+  **对于某些类型 `class List[+A]` ，使 `A` 成为协变意味着对于两种类型 `A` 和 `B` ，如果 `A` 是 `B` 的子类型，那么 `List[A]` 就是 `List[B]` 的子类型**
+  
+  ```scala
+  abstract class Animal {
+    def name: String
+  }
+  case class Cat(name: String) extends Animal
+  case class Dog(name: String) extends Animal
+  ```
+  类型 `Cat` 和 `Dog` 都是 `Animal` 的子类型。 Scala 标准库有一个通用的不可变的类 `sealed abstract class List[+A]`，其中类型参数 `A` 是协变的。 这意味着 `List[Cat]` 是 `List[Animal]`，`List[Dog]` 也是 `List[Animal]`。 
+  ```scala
+  def printAnimalNames(animals: List[Animal]): Unit = {
+    animals.foreach { animal =>
+      println(animal.name)
+    }
+  }
+  val cats: List[Cat] = List(Cat("Whiskers"), Cat("Tom"))
+  val dogs: List[Dog] = List(Dog("Fido"), Dog("Rex"))
+  printAnimalNames(cats)
+  // Whiskers
+  // Tom
+  printAnimalNames(dogs)
+  // Fido
+  // Rex
+  ```
+  
+  ### 逆变
+  使用注释 `-A` ，可以使一个泛型类的类型参数 `A` 成为逆变。正好与协变相反，**对于某个类 `class Write[-A]` ， 使 `A` 逆变意味着对于两种类型 `A` 和 `B` ，如果 `A` 是 `B` 的子类型，那么 `Writer[B]` 是 `Writer[A]`的子类型**
+  ```scala
+  abstract class Animal {
+    def name: String
+  }
+  case class Cat(name: String) extends Animal
+  case class Dog(name: String) extends Animal
+  
+  abstract class Printer[-A] {
+    def print(value: A): Unit
+  }
+  
+  class AnimalPrinter extends Printer[Animal] {
+    def print(animal: Animal): Unit =
+      println("The animal's name is: " + animal.name)
+  }
+  
+  class CatPrinter extends Printer[Cat] {
+    def print(cat: Cat): Unit =
+      println("The cat's name is: " + cat.name)
+  }
+  
+  val myCat: Cat = Cat("Boots")
+  
+  def printMyCat(printer: Printer[Cat]): Unit = {
+    printer.print(myCat)
+  }
+  
+  val catPrinter: Printer[Cat] = new CatPrinter
+  val animalPrinter: Printer[Animal] = new AnimalPrinter
+  
+  printMyCat(catPrinter)
+  printMyCat(animalPrinter)
+  ```
+  
+  
+  ### 不变
+  默认情况下，Scala中的泛型类是不变的。 这意味着它们既不是协变的也不是逆变的。
+  在下例中，类 `Container` 是不变的。 `Container[Cat]` 不是 `Container[Animal]`，反之亦然。
+  ```scala
+  class Container[A](value: A) {
+    private var _value: A = value
+    def getValue: A = _value
+    def setValue(value: A): Unit = {
+      _value = value
+    }
+  }
+  ```
+  假设`Container`是协变的
+  ```scala
+  val catContainer: Container[Cat] = new Container(Cat("Felix"))
+  val animalContainer: Container[Animal] = catContainer
+  animalContainer.setValue(Dog("Spot"))
+  val cat: Cat = catContainer.getValue // 糟糕，我们最终会将一只狗作为值分配给一只猫
+  ```
+  
+  
+  ### 一个例子
+  Scala标准库中的`trait Function1[-T,+R]`,`Function1`表示具有一个参数的函数,其中第一个类型参数`T`表示参数类型,第二个类型参数`R`表示返回类型.`Function1`在其参数类型上是逆变的,并且在其返回类型上是协变的.`A => B` 来表示`Function1[A,B]`
+  ```scala
+  abstract class Animal {
+    def name: String
+  }
+  case class Cat(name: String) extends Animal
+  case class Dog(name: String) extends Animal
+  abstract class SmallAnimal extends Animal
+  case class Mouse(name:String) extends SmallAnimal
+  ```
+  假设一个函数,接受动物类型,返回返回他们的食物类型.
+  如果想要一个`Cat => SmallAnimal`,但是给它一个`Animal => Mouse`,我们的程序仍然可以工作.直观的看,一个`Animal => Mouse`的函数仍然会接受一个`Cat`作为参数,因为`Cat`即是一个`Animal`,并且这个函数返回一个`Mouse`,也是一个`SmallAnimal`.既然我们可以安全地，隐式地用前者代替后者，我们可以说 `Animal => Mouse` 是 `Cat => SmallAnimal` 的子类型。
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

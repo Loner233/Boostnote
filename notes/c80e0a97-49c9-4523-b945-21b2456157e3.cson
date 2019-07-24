@@ -1,9 +1,11 @@
 createdAt: "2019-03-15T15:40:52.973Z"
-updatedAt: "2019-03-24T07:31:43.543Z"
+updatedAt: "2019-07-23T06:02:01.418Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "Java中执行顺序"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ## Java中执行顺序
   1. 基本执行顺序1

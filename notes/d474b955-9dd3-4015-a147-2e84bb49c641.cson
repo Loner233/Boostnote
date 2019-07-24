@@ -1,0 +1,103 @@
+createdAt: "2019-07-24T03:16:54.366Z"
+updatedAt: "2019-07-24T05:44:00.091Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala类型上、下界"
+tags: []
+content: '''
+  # Scala类型上、下界
+  
+  ### 上界
+  Scala中，类型参数和抽象类型都可以有一个类型边界的约束。往往还能提供有关类型的更多的信息。比如`T <: A`这样个声明类型上界，表示类型变量`T`应该是`A`的子类。
+  ```scala
+  abstract class Animal {
+   def name: String
+  }
+  
+  abstract class Pet extends Animal {}
+  
+  class Cat extends Pet {
+    override def name: String = "Cat"
+  }
+  
+  class Dog extends Pet {
+    override def name: String = "Dog"
+  }
+  
+  class Lion extends Animal {
+    override def name: String = "Lion"
+  }
+  
+  class PetContainer[P <: Pet](p: P) {
+    def pet: P = p
+  }
+  
+  val dogContainer = new PetContainer[Dog](new Dog)
+  val catContainer = new PetContainer[Cat](new Cat)
+  
+  // this would not compile
+  val lionContainer = new PetContainer[Lion](new Lion)
+  ```
+  ### 下届
+  与上届相反，类型下届将类型声明为另一种类型的超类型。术语`B >: A`表示类型参数`B`或抽象类型`B`是类型`A`的超类型。大多数情况下，`A`是类的类型参数，`B`是方法的类型参数。
+  ```scala
+  trait Node[+B] {
+    def prepend(elem: B): Node[B]
+  }
+  
+  case class ListNode[+B](h: B, t: Node[B]) extends Node[B] {
+    def prepend(elem: B): ListNode[B] = ListNode(elem, this)
+    def head: B = h
+    def tail: Node[B] = t
+  }
+  
+  case class Nil[+B]() extends Node[B] {
+    def prepend(elem: B): ListNode[B] = ListNode(elem, this)
+  }trait Node[+B] {
+    def prepend(elem: B): Node[B]
+  }
+  
+  case class ListNode[+B](h: B, t: Node[B]) extends Node[B] {
+    def prepend(elem: B): ListNode[B] = ListNode(elem, this)
+    def head: B = h
+    def tail: Node[B] = t
+  }
+  
+  case class Nil[+B]() extends Node[B] {
+    def prepend(elem: B): ListNode[B] = ListNode(elem, this)
+  }
+  ```
+  该程序实现了一个单链表，`Nil`表示空元素，`class ListNode`是一个节点，它包含一个类型为`B`（`head`）的元素和一个对列表其余部分的引用(`tail`)。`class Node`及其子类型是协变的，因为定义了`+B`。
+  但是上述程序并不能编译,因为`prepend`中的参数`elem`是协变的`B`,这样会出错,因为函数的参数类型是逆变的,而返回类型是协变的
+  
+  引入一个新的类型参数`U`来实现这一点,该参数具有`B`作为类型下届.
+  ```scala
+  trait Node[+B] {
+    def prepend[U >: B](elem: U): Node[U]
+  }
+  
+  case class ListNode[+B](h: B, t: Node[B]) extends Node[B] {
+    def prepend[U >: B](elem: U): ListNode[U] = ListNode(elem, this)
+    def head: B = h
+    def tail: Node[B] = t
+  }
+  
+  case class Nil[+B]() extends Node[B] {
+    def prepend[U >: B](elem: U): ListNode[U] = ListNode(elem, this)
+  }
+  ```
+  
+  ```scala
+  trait Bird
+  case class AfricanSwallow() extends Bird
+  case class EuropeanSwallow() extends Bird
+  
+  
+  val africanSwallowList= ListNode[AfricanSwallow](AfricanSwallow(), Nil())
+  val birdList: Node[Bird] = africanSwallowList
+  birdList.prepend(new EuropeanSwallow)
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

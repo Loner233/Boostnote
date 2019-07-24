@@ -1,0 +1,111 @@
+createdAt: "2019-07-23T06:02:24.464Z"
+updatedAt: "2019-07-24T06:40:07.266Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala复习-基础"
+tags: [
+  "scala"
+]
+content: '''
+  # Scala复习-基础
+  ### Blocks
+  最后一行的表达式的结果就是整个代码块的结果
+  
+  ### Functions
+  ```scala
+  // 匿名函数
+  (x:Int) => x + 1
+  // 不匿名的函数
+  val addOne = (x:Int) => x + 1
+  ```
+  
+  ### Methods
+  方法由`def`关键字，然后是一个方法名，然后参数列表，然后返回类型和方法体
+  ```scala
+  def add(x: Int, y: Int): Int = x + y
+  println(add(1, 2)) // 3
+  ```
+  可以有多个参数列表：
+  ```scala
+  def addThenMultiply(x: Int, y: Int)(multiplier: Int): Int = (x + y) * multiplier
+  println(addThenMultiply(1, 2)(3)) // 9
+  ```
+  ### Classes
+  由`class`关键字，然后是类名，然后是构造器的参数
+  ```scala
+  class Greeter(prefix: String, suffix: String) {
+    def greet(name: String): Unit =
+      println(prefix + name + suffix)
+  }
+  ```
+  使用`new`关键词来进行实例化
+  ```scala
+  val greeter = new Greeter("Hello, ", "!")
+  greeter.greet("Scala developer") // Hello, Scala developer!
+  ```
+  
+  ### Case Class
+  Scala有一个特殊的类型叫做”Case" Class,其不可更改，通过Value进行比较，可以使用`case class`关键字进行定义。
+  
+  实例化是可以不使用`new`关键词,使用value来进行比较
+  ```scala
+  if (point == anotherPoint) {
+    println(point + " and " + anotherPoint + " are the same.")
+  } else {
+    println(point + " and " + anotherPoint + " are different.")
+  } // Point(1,2) and Point(1,2) are the same.
+  
+  if (point == yetAnotherPoint) {
+    println(point + " and " + yetAnotherPoint + " are the same.")
+  } else {
+    println(point + " and " + yetAnotherPoint + " are different.")
+  } // Point(1,2) and Point(2,2) are different.
+  ```
+  
+  ### Objects
+  这个东西是我们能够定义单个实例，使用`object`关键字进行定义
+  ```scala
+  object IdFactory {
+    private var counter = 0
+    def create(): Int = {
+      counter += 1
+      counter
+    }
+  }
+  ```
+  可以使用它的名字进行直接访问
+  ```scala
+  val newId: Int = IdFactory.create()
+  println(newId) // 1
+  val newerId: Int = IdFactory.create()
+  println(newerId) // 2
+  ```
+  
+  ### Traits
+  使用`trait`关键词来定义
+  ```scala
+  trait Greeter {
+    def greet(name: String): Unit
+  }
+  ```
+  Trait可以有默认的实现
+  ```scala
+  trait Greeter {
+    def greet(name: String): Unit =
+      println("Hello, " + name + "!")
+  }
+  ```
+  可以用`extends`来扩展这个trait，并且使用`override`来重载其实现
+  
+  ### Main Method
+  ```scala
+  object Main {
+    def main(args: Array[String]): Unit =
+      println("Hello, Scala developer!")
+  }
+  ```
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

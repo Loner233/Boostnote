@@ -1,9 +1,11 @@
 createdAt: "2019-03-17T07:41:48.280Z"
-updatedAt: "2019-03-24T07:34:30.193Z"
+updatedAt: "2019-07-23T06:01:50.329Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "垃圾回收"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ## 垃圾回收
   ### 引用技术法

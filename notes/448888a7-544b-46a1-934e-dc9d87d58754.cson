@@ -1,0 +1,68 @@
+createdAt: "2019-07-23T07:48:23.995Z"
+updatedAt: "2019-07-24T06:40:10.117Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala复习—trait"
+tags: []
+content: '''
+  # Scala复习—trait
+  ## 定义一个Trait
+  `trait`关键词和一个`identifier`
+  ```scala
+  trait HairColor
+  ```
+  Traits非常游泳，尤其是使用泛型和抽象方法
+  
+  ## 使用traits
+  - 使用`extends`关键词
+  - 使用`override`关键词来实现抽象方法
+  ```scala
+  trait Iterator[A] {
+    def hasNext: Boolean
+    def next(): A
+  }
+  
+  class IntIterator(to: Int) extends Iterator[Int] {
+    private var current = 0
+    override def hasNext: Boolean = current < to
+    override def next(): Int = {
+      if (hasNext) {
+        val t = current
+        current += 1
+        t
+      } else 0
+    }
+  }
+  
+  
+  val iterator = new IntIterator(10)
+  iterator.next()  // returns 0
+  iterator.next()  // returns 1
+  ```
+  This IntIterator class takes a parameter to as an upper bound. It extends Iterator[Int] which means that the next method must return an Int.
+  
+  ## Subtyping
+  ```scala
+  import scala.collection.mutable.ArrayBuffer
+  
+  trait Pet {
+    val name: String
+  }
+  
+  class Cat(val name: String) extends Pet
+  class Dog(val name: String) extends Pet
+  
+  val dog = new Dog("Harry")
+  val cat = new Cat("Sally")
+  
+  val animals = ArrayBuffer.empty[Pet]
+  animals.append(dog)
+  animals.append(cat)
+  animals.foreach(pet => println(pet.name))  // Prints Harry Sally
+  ```
+  `trait`有了一个抽象的field`name`，`Cat`和`Dog`在构造其里实现了。
+  最后一行调用`pet.name`，其中必须是trait Pet的子类。
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

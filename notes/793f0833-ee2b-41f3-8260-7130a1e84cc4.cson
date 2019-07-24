@@ -1,0 +1,61 @@
+createdAt: "2019-07-24T06:34:06.531Z"
+updatedAt: "2019-07-24T06:39:56.944Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "内部类"
+tags: []
+content: '''
+  # 内部类
+  
+  ```scala
+  class Graph {
+    class Node {
+      var connectedNodes: List[Node] = Nil
+      def connectTo(node: Node) {
+        if (connectedNodes.find(node.equals).isEmpty) {
+          connectedNodes = node :: connectedNodes
+        }
+      }
+    }
+    var nodes: List[Node] = Nil
+    def newNode: Node = {
+      val res = new Node
+      nodes = res :: nodes
+      res
+    }
+  }
+  ```
+  该程序将图形表示为节点列表`List[Node]`.每个节点都有一个用来存储与其相连的其他节点的列表(`connectedNodes`).类`Node`是一个**路径依赖类型**,因为它嵌套在类`Graph`中.因此,`connectedNodes`中存储的所有节点必须使用同一个`Graph`的实例对象的`newNode`方法来创建.
+  ```scala
+  val graph1: Graph = new Graph
+  val node1: graph1.Node = graph1.newNode
+  val node2: graph1.Node = graph1.newNode
+  node1.connectTo(node2)      // legal
+  val graph2: Graph = new Graph
+  val node3: graph2.Node = graph2.newNode
+  node1.connectTo(node3)      // illegal!
+  ```
+  类型 `graph1.Node` 与类型 `graph2.Node` 完全不同
+  如果我们希望能够连接不同图形的节点,需要把`Node`类型改写为`Graph#Node`,如下
+  ```scala
+  class Graph {
+    class Node {
+      var connectedNodes: List[Graph#Node] = Nil
+      def connectTo(node: Graph#Node) {
+        if (connectedNodes.find(node.equals).isEmpty) {
+          connectedNodes = node :: connectedNodes
+        }
+      }
+    }
+    var nodes: List[Node] = Nil
+    def newNode: Node = {
+      val res = new Node
+      nodes = res :: nodes
+      res
+    }
+  }
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

@@ -1,9 +1,11 @@
 createdAt: "2019-03-16T01:51:25.820Z"
-updatedAt: "2019-03-16T01:57:46.534Z"
+updatedAt: "2019-07-23T06:02:05.105Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "Java的类"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ## Java的类
   

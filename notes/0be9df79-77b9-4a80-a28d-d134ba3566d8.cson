@@ -1,0 +1,91 @@
+createdAt: "2019-07-24T07:52:19.753Z"
+updatedAt: "2019-07-24T08:32:10.668Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala复习-隐式参数和隐式转换"
+tags: []
+content: '''
+  # Scala复习-隐式参数和隐式转换
+  ### 隐式参数
+  方法可以具有 隐式 参数列表，由参数列表开头的 implicit 关键字标记。 如果参数列表中的参数没有像往常一样传递， Scala 将查看它是否可以获得正确类型的隐式值，如果可以，则自动传递。
+  
+  Scala将查找这些擦按数的位置分为两类:
+  - Scala在调用包含有隐式参数块的方法时,将首先查找可以直接访问的隐式定义和隐式参数(无前缀)
+  - 然后,他在所有伴生对象中查找与隐式候选类型相关的有隐式标记的成员
+  
+  ```scala
+  abstract class Monoid[A] {
+    def add(x: A, y: A): A
+    def unit: A
+  }
+  
+  object ImplicitTest {
+    implicit val stringMonoid: Monoid[String] = new Monoid[String] {
+      def add(x: String, y: String): String = x concat y
+      def unit: String = ""
+    }
+    
+    implicit val intMonoid: Monoid[Int] = new Monoid[Int] {
+      def add(x: Int, y: Int): Int = x + y
+      def unit: Int = 0
+    }
+    
+    def sum[A](xs: List[A])(implicit m: Monoid[A]): A =
+      if (xs.isEmpty) m.unit
+      else m.add(xs.head, sum(xs.tail))
+      
+    def main(args: Array[String]): Unit = {
+      println(sum(List(1, 2, 3)))       // uses IntMonoid implicitly
+      println(sum(List("a", "b", "c"))) // uses StringMonoid implicitly
+    }
+  }
+  ```
+  ### 隐式转换
+  隐式转换在两种情况下会用到:
+  __1__ 如果一个表达式`e`的类型为`S`,并且类型`S`不符合表达式的期望类型`T`
+  __2__ 在一个类型为`S`的实例对象`e`中调用`e.m`,如果被调用的`m`并没有在类型`S`中声明
+  
+  - 第一种情况下,搜索转换`c`,它适用于`e`,并且结果类型为`T`
+  - 第二种情况下,搜索转换`c`,它适用于`e`,并且结果包含名为`m`的成员
+  #### 第一种情况
+  ```scala
+  class mydata(var _data:Int){
+      def data = _data
+      def data_=(temp_data:Int) = {
+          _data = temp_data
+      }
+  }
+  implicit def mydata2Int(t:mydata):Int = {
+      t.data
+  }
+  val d = new mydata(123321)
+  d.data = 233
+  val IntNum:Int = d
+  ```
+  #### 第二种情况
+  ```scala
+  class myData(var _data:Int){
+      def data = _data
+      def data_=(temp_data:Int) = {
+          _data = temp_data
+      }
+  }
+  class anotherData(var _data:Int){
+      def data = _data
+      def data_=(temp_data:Int) = {
+          _data = temp_data
+      }
+      def ndata = - _data
+  }
+  implicit def myData2Another(mydata:myData):anotherData = {
+      new anotherData(mydata.data)
+  }
+  val a = new myData(123)
+  a.ndata
+  ```
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

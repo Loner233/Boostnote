@@ -1,9 +1,11 @@
 createdAt: "2019-03-16T00:16:37.368Z"
-updatedAt: "2019-03-16T01:07:20.090Z"
+updatedAt: "2019-07-23T06:02:14.844Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "Java装箱和拆箱"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ### Java装箱和拆箱
   自动装箱和拆箱的目的是将原始类型值自动地转换成对应的对象。自动装箱与拆箱的机制可以让我们在Java的变量赋值或者是方法调用等情况下使用原始类型或者对象类型更加直接简单。

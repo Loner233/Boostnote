@@ -1,9 +1,11 @@
 createdAt: "2019-03-15T14:29:14.184Z"
-updatedAt: "2019-03-15T15:13:39.051Z"
+updatedAt: "2019-07-23T06:02:18.830Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "Java中的构造器，构造代码块，静态代码块"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ## Java中的构造器，构造代码块，静态代码块
   1. 构造器与类同名，且没有返回类型和返回值

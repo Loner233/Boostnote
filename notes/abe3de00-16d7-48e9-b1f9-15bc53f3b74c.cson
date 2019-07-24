@@ -1,0 +1,55 @@
+createdAt: "2019-07-23T06:32:27.605Z"
+updatedAt: "2019-07-24T06:40:08.354Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Scala复习-类型"
+tags: []
+content: '''
+  # Scala复习-类型
+  ![unified-types-diagram.png](:storage/abe3de00-16d7-48e9-b1f9-15bc53f3b74c/a2104e31.png)
+  `Any`是所有类型的超类，也被称作顶层类型。它定义了一些通用的方法`equals`、`hashCode`、`toString`
+  `Any`拥有两个直接的子类`AnyVal`、`AnyRef`
+  
+  ### `AnyVal`
+  它代表value types,现有九个已经定义了的类型，并且他们不是可空的。
+  - Double
+  - Float
+  - Int
+  - Short
+  - Byte
+  - Char
+  - Unit
+  - Boolean
+  所有的函数都必须有个返回值，所以就有了`Unit`，他没有任何有意义的信息
+  
+  ### `AnyRef`
+  表示reference type.所有不空的类型都是被定义为reference type。用户定义的Type都是`AnyRef`的subtype，如果scala在JRE上下文中，`AnyRef`对应着`java.lang.Object`
+  
+  # Type Casting
+  ![test.png](:storage/abe3de00-16d7-48e9-b1f9-15bc53f3b74c/15a3efc3.png)
+  类型按上图那么Casting
+  ```scala
+  val a:Float = 0.0d 
+  //cmd0.sc:1: type mismatch;
+   //found   : Double(0.0)
+   //required: Float
+  //val a:Float = 0.0d
+  //              ^
+  //Compilation Failed
+  
+  val a:Double = 0.0f
+  //a: Double = 0.0
+  ```
+  
+  # Nothing and Null
+  `Nothing`是所有type的subtype，或者也被成为底层type，没有值是拥有`Nothing`这个类型的。
+  common use is to signal non-termination such as a thrown exception, program exit, or an infinite loop
+  
+  `Null`是所有`reference types`的subtype。他拥有一个唯一的单独的value，由`null`定义。
+  `Null` is provided mostly for interoperability with other JVM languages and **should almost never be used in Scala code**. 
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

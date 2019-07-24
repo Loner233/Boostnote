@@ -1,9 +1,11 @@
 createdAt: "2019-03-17T08:36:35.344Z"
-updatedAt: "2019-03-24T07:34:28.551Z"
+updatedAt: "2019-07-23T06:01:54.190Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "静态工厂"
-tags: []
+tags: [
+  "java"
+]
 content: '''
   ### 静态工厂
   一般开发中都是通过`new`关键字通过构造函数来实现对象的创建，如
