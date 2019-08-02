@@ -1,0 +1,93 @@
+createdAt: "2019-08-01T01:26:01.636Z"
+updatedAt: "2019-08-01T01:54:44.692Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "tqdm"
+tags: []
+content: '''
+  # tqdm
+  `tqdm`有三种主要的方
+  ### Iterable-based
+  把`tqdm()`加在任何可迭代对象上
+  ```python
+  from tqdm import tqdm
+  import time
+  
+  text = ""
+  for char in tqdm(['a', 'b', 'c', 'd']):
+      time.sleep(0.25)
+      text = text + char
+  ```
+  `trange(i)`是一个特别的优化了的`tqdm(range(i))`的实例
+  ```python
+  for i in trange(100):
+      time.sleep(0.01)
+  ```
+  
+  ```python
+  pbar = tqdm(["a", "b", "c", "d"])
+  for char in pbar:
+      time.sleep(0.25)
+      pbar.set_description("Processing %s" % char)
+  ```
+  在循环外面实例化
+  ```python
+  pbar = tqdm(["a", "b", "c", "d"])
+  for char in pbar:
+      time.sleep(0.25)
+      pbar.set_description("Processing %s" % char)
+  ```
+  ### Manual
+  使用一个`with`状态来手动控制`tqdm`的更新
+  ```python
+  with tqdm(total=100) as pbar:
+      for i in range(10):
+          time.sleep(0.1)
+          pbar.update(10)
+  ```
+  如果提供了一个可选变量`total`(或者`len()`可迭代对象)，预测的过程会被显示出来
+  当然，`with`也是可选的，甚至可以指派`tqdm()`到一个变量上面，但是不要忘记最后`del`或者`close()`这个变量
+  ```python
+  pbar = tqdm(total=100)
+  for i in range(10):
+      time.sleep(0.1)
+      pbar.update(10)
+  pbar.close()
+  ```
+  ### Module
+  `tqdm`可以作为一个单独的脚本在命令行中运行，只需要简单地在管道中插入`tqdm`或者`python -m tqdm`
+  
+  ```bash
+  time find ./Desktop/ -name '*.py' -type f -exec cat \\{} \\; | wc -l
+  # 838
+  
+  # real    0m0.018s
+  # user    0m0.018s
+  # sys     0m0.006s
+  ```
+  
+  ```bash
+  time find ./Desktop/ -name '*.py' -type f -exec cat \\{} \\; |tqdm| wc -l
+  # 839it [00:00, 1239528.37it/s]
+  # 838
+  
+  # real    0m0.108s
+  # user    0m0.075s
+  # sys     0m0.037s
+  ```
+  
+  通常`tqdm`的参数这边也能用
+  ```bash
+  find . -name '*.py' -type f -exec cat \\{} \\; |tqdm --unit loc --unit_scale --total 857366 >> /dev/null
+  ```
+  
+  备份一个巨大的文件夹
+  ```bash
+  7z a -bd -r backup.7z docs/ | grep Compressing | tqdm --total $(find docs/ -type f | wc -l) --unit files >> backup.log
+  ```
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

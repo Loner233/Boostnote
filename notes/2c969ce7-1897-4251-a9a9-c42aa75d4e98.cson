@@ -1,5 +1,5 @@
 createdAt: "2019-07-08T07:12:22.962Z"
-updatedAt: "2019-07-09T01:50:29.714Z"
+updatedAt: "2019-08-01T07:51:39.781Z"
 type: "MARKDOWN_NOTE"
 folder: "cab491cd31795b9833d0"
 title: "MCMC(马尔科夫蒙特卡罗) #2"
@@ -34,7 +34,7 @@ content: '''
   1) $$\\lim_{n \\to \\infty} P^n_{ij} = \\pi(j)$$
   2) $$\\lim_{n \\to \\infty} P^n = \\left(\\begin{array}{ccc} \\pi(1) & \\pi(2) & ... & \\pi(j) & ... \\\\\\pi(1) & \\pi(2) & ... & \\pi(j) & ... \\\\...&...&...&...&...\\\\ \\pi(1) & \\pi(2) & ... & \\pi(j) & ... \\\\...&...&...&...&... \\end{array}\\right)$$
   3) $$\\pi(j) = \\sum^{\\infty}_{i=0}\\pi(i)P_{ij}$$
-  4) $\\pi$是方程$$\\piP = \\pi$$的唯一非负解,其中:
+  4) $\\pi$是方程$\\pi P = \\pi$的唯一非负解,其中:
   $$\\pi = [\\pi(1),\\pi(2),...,\\pi(j),...],\\sum^{\\infty}_{i=0}\\pi(i) = 1$$
   #### 性质的解释
   

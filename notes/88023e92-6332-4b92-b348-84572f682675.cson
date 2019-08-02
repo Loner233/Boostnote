@@ -1,5 +1,5 @@
 createdAt: "2019-04-22T10:16:12.302Z"
-updatedAt: "2019-04-22T10:18:26.472Z"
+updatedAt: "2019-08-01T01:25:50.158Z"
 type: "MARKDOWN_NOTE"
 folder: "3ed9013aac4316501eaf"
 title: "Numpy中的clip() 的用法"
@@ -17,8 +17,7 @@ content: '''
   import numpy as np
   x=np.array([1,2,3,5,6,7,8,9])
   np.clip(x,3,8)
-  Out[88]:
-  array([3, 3, 3, 5, 6, 7, 8, 8])
+  # array([3, 3, 3, 5, 6, 7, 8, 8])
   ```
   
   ### 多维数组
@@ -26,9 +25,9 @@ content: '''
   x=np.array([[1,2,3,5,6,7,8,9],[1,2,3,5,6,7,8,9]]) 
   np.clip(x,3,8)
   
-  Out[90]: 
-  array([[3, 3, 3, 5, 6, 7, 8, 8], 
-  [3, 3, 3, 5, 6, 7, 8, 8]])
+  
+  # array([[3, 3, 3, 5, 6, 7, 8, 8], 
+  # [3, 3, 3, 5, 6, 7, 8, 8]])
   ```
 '''
 linesHighlighted: []

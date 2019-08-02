@@ -6,6 +6,11 @@
       "name": "复习"
     },
     {
+      "key": "cab491cd31795b9833d0",
+      "color": "#3FD941",
+      "name": "数理统计"
+    },
+    {
       "key": "91678286fbe5c256d96d",
       "color": "#30D5C8",
       "name": "Tensorflow"
@@ -16,14 +21,9 @@
       "name": "Python"
     },
     {
-      "key": "56105c7777a26a536ee3",
+      "key": "7c4da5dc968083ef946a",
       "color": "#E10051",
-      "name": "BigData"
-    },
-    {
-      "key": "cab491cd31795b9833d0",
-      "color": "#3FD941",
-      "name": "数理统计"
+      "name": "Git"
     },
     {
       "key": "7f0dca1b9cbf2e06c514",
@@ -31,19 +31,19 @@
       "name": "Python"
     },
     {
-      "key": "4221518f159f7df2f352",
-      "color": "#2BA5F7",
-      "name": "生活日常"
-    },
-    {
-      "key": "7c4da5dc968083ef946a",
+      "key": "56105c7777a26a536ee3",
       "color": "#E10051",
-      "name": "Git"
+      "name": "BigData"
     },
     {
       "key": "9bf72d6668381ae56e61",
       "color": "#3FD941",
       "name": "计算机网络"
+    },
+    {
+      "key": "4221518f159f7df2f352",
+      "color": "#2BA5F7",
+      "name": "生活日常"
     },
     {
       "key": "a6520603511b19c5f4bb",
@@ -54,6 +54,11 @@
       "key": "199620c1649871a0589e",
       "color": "#E8D252",
       "name": "JavaScript"
+    },
+    {
+      "key": "b45473d10ce72e616079",
+      "color": "#2BA5F7",
+      "name": "架构"
     },
     {
       "key": "599c41a20ca2d25d4c17",
