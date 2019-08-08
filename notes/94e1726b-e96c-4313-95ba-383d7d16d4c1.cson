@@ -1,0 +1,29 @@
+createdAt: "2019-08-02T05:31:25.125Z"
+updatedAt: "2019-08-02T05:46:18.754Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "满条件分布"
+tags: []
+content: '''
+  # 满条件分布
+  #### 定义
+  MCMC方法的目标分布通常是多元联合概率分布$p(x) = p(x_1,x_2,...,x_k)$,其中$x = (x_1,x_2,...,x_k)^T$为$k$维随机变量
+  
+  如果条件概率分布$p(x_I|x_{-I})$中出现了以上的所有$k$个变量,其中:
+  $$x_I=\\{x_i,i \\in I\\}$$
+  $$x_{-I}=\\{x_i,i \\notin I\\}$$
+  $$I \\subset K = \\{1,2,...,k\\}$$
+  那么这种条件概率分布就被称作满条件分布(full conditional distribution)
+  
+  
+  #### 性质
+  __1__ 对于任意的$x,x^{'} \\in X$和任意的$I \\subset K$,有
+  $$p(x_I|p_{-I}) = \\frac{p(x)}{\\int p(x)dx_I}  \\propto p(x)$$
+  
+  __2__ 对于任意的$x,x^{'} \\in X$和任意的$I \\subset K$,有
+  $$\\frac{p({x'}_I|{x'}_{-I})}{p(x_I|x_{-I})} = \\frac{p(x')}{p(x)}$$
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

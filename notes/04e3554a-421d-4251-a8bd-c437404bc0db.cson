@@ -1,5 +1,5 @@
 createdAt: "2019-07-24T09:58:27.350Z"
-updatedAt: "2019-07-24T09:58:27.350Z"
+updatedAt: "2019-08-02T05:31:40.258Z"
 type: "MARKDOWN_NOTE"
 folder: "7ad16a328420ce2c1cef"
 title: "Scala复习-隐式参数和隐式转换 副本"
@@ -88,4 +88,4 @@ content: '''
 linesHighlighted: []
 tags: []
 isStarred: false
-isTrashed: false
+isTrashed: true

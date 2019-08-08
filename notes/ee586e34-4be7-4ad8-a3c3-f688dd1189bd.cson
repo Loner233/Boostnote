@@ -1,0 +1,29 @@
+createdAt: "2019-08-08T06:41:17.555Z"
+updatedAt: "2019-08-08T06:53:43.277Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "form标签中的enctype属性"
+tags: []
+content: '''
+  # form标签中的enctype属性
+  
+  ```html
+  <form action="/action_page_binary.asp" method="post" enctype="multipart/form-data">
+    First name: <input type="text" name="fname"><br>
+    Last name: <input type="text" name="lname"><br>
+    <input type="submit" value="Submit">
+  </form>
+  ```
+  今天突遇django 上传文件,后台怎么也收不到上床的文件.其中犯了个错:
+  **`<form>`标签中没有指定`enctype`属性,这个东西好久没遇到了,既然遇到了,正好来记录一下**
+  
+  
+  #### `<form enctype="value">`
+  其中`value`有三种可选项
+  - `application/x-www-form-urlencoded` 这是默认的,所有的字符都会在发送前进行编码(空格会被转换成'+',特殊字符会被转换成'ASCII HEX'(16进制的ASCII))
+  - `multipart/form-data` 没有字符会被编码,当需要用表单来进行文件上传的时候就需要使用这种.
+  - `text/plain`空格会被转换成'+',但是特殊字符都不会被编码
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

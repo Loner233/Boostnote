@@ -1,0 +1,29 @@
+createdAt: "2019-08-02T06:11:58.325Z"
+updatedAt: "2019-08-08T06:36:53.921Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "马尔可夫链蒙特卡罗法与统计学习"
+tags: []
+content: '''
+  # 马尔可夫链蒙特卡罗法与统计学习
+  假设观测数据由随机变量$y \\in Y$表示,模型由随机变量$x \\in X$表示.
+  贝叶斯学习通过贝叶斯定理计算给定数据条件下模型的后验概率,并选择后验概率最大的模型.
+  ### 后验概率:
+  $$p(x|y) = \\frac{p(x)p(y|x)}{\\int_xp(y|x')p(x')dx'}$$
+  
+  ### 贝叶斯学习中常用到的三种积分运算:
+  #### 规范化(normalization)
+  后验概率中需要规范化计算:
+  $$\\int_xp(y|x')p(x')dx'$$
+  #### 边缘化(marginaliztion)
+  如果有隐变量$z \\in Z$,后验概率的计算需要边缘化计算
+  $$p(x|y) = \\int_zp(x,z|y)dz$$
+  #### 数学期望(expection)
+  如果有一个函数$f(x)$,可以计算该函数的关于后验概率分布的数学期望:
+  $$E_{P(x|y)}[f(x)] = \\int_xf(x)p(x|y)dx$$
+  
+  当观测数据和模型都很复杂的时候,以上积分会变得非常难以计算,MCMC为这些积分的计算提供了一个通用有效的解决方案.
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
