@@ -1,0 +1,30 @@
+createdAt: "2019-08-13T02:43:43.925Z"
+updatedAt: "2019-08-13T03:10:24.641Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "tf.py_function"
+tags: []
+content: '''
+  # tf.py_function
+  这个方法允许用python方法来在TensorFlow图中表示计算，即：
+  **将python方法转换成tensorflow的op**
+  这将允许表达式使用python的控制流(`if`,`while`,`for`)，而不用使用TensorFlow的控制流
+  (`tf.cond`,`tf.while_loop`)
+  
+  example
+  ```python
+  def add(x, y):
+      return x + y
+      
+  def tf_add(x, y):
+      return tf.py_function(func=add,inp=[x, y],Tout=[tf.int32])
+  ```
+  
+  - `func`:一个python的方法，接受一系列参数，type对应于`inp`中的`tf.Tensor`对象，返回多个/一个/不返回`Tensor`对象，返回对象的type对应于`Tout`中的指定
+  - `inp`：一个由`Tensor`组成的`list`
+  - `Tout`: 一个由tensorflow的数据类型组成的`list`或者`tuple`,或者是一个单独的tensorflow数据类型，或者是一个空`list`（如果`func`返回值是`None`）
+  - `name`: op的名字（可选）
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

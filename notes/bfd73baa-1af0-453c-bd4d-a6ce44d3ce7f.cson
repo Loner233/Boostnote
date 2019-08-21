@@ -1,0 +1,41 @@
+createdAt: "2019-08-21T06:24:28.004Z"
+updatedAt: "2019-08-21T07:57:05.951Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "Batch-Normalization"
+tags: []
+content: '''
+  # Batch-Normalization
+  不涉及到基本原理,基本原理见OneNote笔记
+  ```python
+  import tensorflow as tf
+  import tensorflow.keras as keras
+  
+  model = keras.models.Sequential([
+   keras.layers.BatchNormalization()
+  ])
+  model.build(input_shape=(None,10))
+  
+  model.summary()
+  ```
+  ```
+  Model: "sequential"
+  _________________________________________________________________
+  Layer (type)                 Output Shape              Param #   
+  =================================================================
+  batch_normalization (BatchNo multiple                  40        
+  =================================================================
+  Total params: 40
+  Trainable params: 20
+  Non-trainable params: 20
+  _________________________________________________________________
+  
+  ```
+  这时,我就很好奇了,对于input为10阶的数据,为什么BN有40个参数,理论上每个激活输出都有一个$\\gamma$和一个$\\beta$,应该有20个参数才对啊!!!
+  
+  原因很简单,其中20个是`Trainable params`,即上面的$\\gamma$和$\\beta$,剩下20个参数为`Non-trainable params`,即是**期望**和**方差**,问题又来这,这个方差和期望应该各只有一个才对啊,为什么有十个方差,十个期望呢?!!?!?
+  **BN并不是计算隐层所有神经元的输出的方差与期望,而是统计第k的神经元n个不同batch的输出,将其作为作为一个集合,计算其方差与期望**
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

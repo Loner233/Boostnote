@@ -26,16 +26,6 @@
       "name": "Git"
     },
     {
-      "key": "7f0dca1b9cbf2e06c514",
-      "color": "#E10051",
-      "name": "Python"
-    },
-    {
-      "key": "56105c7777a26a536ee3",
-      "color": "#E10051",
-      "name": "BigData"
-    },
-    {
       "key": "9bf72d6668381ae56e61",
       "color": "#3FD941",
       "name": "计算机网络"
@@ -46,14 +36,9 @@
       "name": "生活日常"
     },
     {
-      "key": "a6520603511b19c5f4bb",
-      "color": "#2BA5F7",
-      "name": "Markdown"
-    },
-    {
-      "key": "199620c1649871a0589e",
-      "color": "#E8D252",
-      "name": "JavaScript"
+      "key": "e6ce7f6bbed693c566de",
+      "color": "#E10051",
+      "name": "搬砖"
     }
   ],
   "version": "1.0"

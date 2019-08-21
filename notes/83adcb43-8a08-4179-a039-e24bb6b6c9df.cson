@@ -1,5 +1,5 @@
 createdAt: "2019-04-16T06:24:28.612Z"
-updatedAt: "2019-04-16T06:29:26.024Z"
+updatedAt: "2019-08-21T07:29:13.593Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
 title: "keras保存模型"
@@ -7,12 +7,13 @@ tags: []
 content: '''
   ## keras保存模型
   ```python
+  import tensorflow as tf
+  from tensorflow.keras.datasets import mnist
+  from tensorflow.keras.layers import BatchNormalization
+  from tensorflow.keras.models import Sequential
+  from tensorflow.keras.layers import Dense
+  from tensorflow.keras.optimizers import SGD
   import numpy as np
-  from keras.datasets import mnist
-  from keras.utils import np_utils
-  from keras.models import Sequential
-  from keras.layers import Dense
-  from keras.optimizers import SGD
   
   # 载入数据
   (x_train,y_train),(x_test,y_test) = mnist.load_data()
@@ -24,12 +25,14 @@ content: '''
   x_train = x_train.reshape(x_train.shape[0],-1)/255.0
   x_test = x_test.reshape(x_test.shape[0],-1)/255.0
   # 换one hot格式
-  y_train = np_utils.to_categorical(y_train,num_classes=10)
-  y_test = np_utils.to_categorical(y_test,num_classes=10)
+  y_train = tf.one_hot(y_train, depth=10)
+  y_test = tf.one_hot(y_test, depth=10)
   
   # 创建模型，输入784个神经元，输出10个神经元
   model = Sequential([
-          Dense(units=10,input_dim=784,bias_initializer='one',activation='softmax')
+          Dense(units=128,input_dim=784,bias_initializer='one',activation='softmax'),
+          BatchNormalization(),
+          Dense(units=10,activation='softmax')
       ])
   
   # 定义优化器

@@ -1,0 +1,53 @@
+createdAt: "2019-08-19T07:44:40.704Z"
+updatedAt: "2019-08-21T06:12:41.900Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "Gaussian Error Linear Unit(a.k.a gelu)"
+tags: []
+content: '''
+  # Gaussian Error Linear Unit(a.k.a gelu)
+  ### 正态分布
+  得从正态分布$X ～ N(\\mu,\\sigma^2)$开始说起,其密度函数为:
+  $$f(x) = \\frac{1}{\\sigma\\sqrt[]{2\\pi}}e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$
+  
+  此时,当$(\\mu=0,\\sigma=1)$,正态分布就变成了所谓的标准正态分布$~N(0,1)$,其密度函数为:
+  $$f(x)= \\frac{1}{\\sqrt[]{2\\pi}}e^{-\\frac{x^2}{2}}$$
+  
+  ### 累积分布函数
+  $$F(x) = P(X \\leq x) = \\frac{1}{\\sigma\\sqrt{2\\pi}}\\int_{-\\infin}^{x}e^{-\\frac{(t-\\mu)^2}{2\\sigma^2}}dt$$
+  以上正态分布的累积分布函数能够由一个叫做**误差函数**的特殊函数表示:
+  $$\\Phi(x) = \\frac{1}{2}[1 + erf(\\frac{z-\\mu}{\\sigma\\sqrt{2}})]$$
+  
+  通常来说,以上的$\\Phi(x)$都是指的是标准正态分布的累积分布函数,即$(\\mu=0,\\sigma=1)$,此时:
+  $$\\Phi(x)=\\frac{1}{2}[1+erf(\\frac{x}{\\sqrt{2}})]$$
+  其中误差函数被定义为:
+  $$erf(\\beta) = \\frac{2}{\\sqrt{\\pi}}\\int_0^{\\beta}e^{-y^2}dy$$
+  误差函数有如下的性质:
+  - $erf(-\\beta) = -erf(\\beta)$
+  - $erf(\\infin) = 1$
+  - 对于均值为$\\alpha$,方差$\\sigma^2$的正态分布,其取值落在$(\\alpha - \\beta\\sigma,\\alpha+\\beta\\sigma)$内的概率为:$erf(\\frac{\\beta}{\\sqrt{2}})$
+  ### GELU
+  高斯误差线性单元被定义为:
+  $$GELU(x) = xP(X \\leq x) = x\\Phi(x)$$
+  - 特别地,以上$\\Phi(x)$是正态分布的累积分布函数,所以就有两个超参数$\\mu,\\sigma$,通常这两个值都是按照标准正态分布来设置的
+  
+  ##### 论文中的两点建议
+  - 在深度学习中如果选择GELU的作为激活函数来训练的化,使用一个带有动量的优化器会比较好
+  - 选择一个正态分布的累积分布函数的近似是非重要
+  > **sigmoid**是一种累积分布函数的近似,使用Simoid Linear Unit(SiLU)$x\\sigma(x)$的效果比GELU差,但是比ReLU和ELU好
+  
+  所以,通常使用:
+  $$x\\sigma(1.702x)$$
+  或者:
+  $$0.5x(1+tanh[\\sqrt{\\frac{2}{\\pi}}(x+ 0.044715x^3)])$$
+  来作为$x\\Phi(x)$的近似
+  上一个,来源不明,貌似是作者在论文中经过实验提出的,
+  下一个近似,参见[Approximations to the cumulative normal
+  function and its inverse for use on a pocket calculator.
+  Applied Statistics,](https://link.springer.com/article/10.3758/BF03200956)
+  上文作者貌似并没有直接提出这个近似公式,这篇论文年代久远还是影印的,风格也和现在迥然不同,暂时没有细细地读,我是通过[A Simple Approximation to the Area Under Standard
+  Normal Curve](http://www.hrpub.org/download/20140305/MS7-13401470.pdf)这篇论文中作者提到了这个近似公式是由前一篇论文中提出的,这边还有待进一步推导.to be continue
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
