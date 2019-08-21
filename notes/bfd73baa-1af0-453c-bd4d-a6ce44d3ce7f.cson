@@ -1,5 +1,5 @@
 createdAt: "2019-08-21T06:24:28.004Z"
-updatedAt: "2019-08-21T07:57:05.951Z"
+updatedAt: "2019-08-21T08:44:17.084Z"
 type: "MARKDOWN_NOTE"
 folder: "91678286fbe5c256d96d"
 title: "Batch-Normalization"
@@ -7,6 +7,7 @@ tags: []
 content: '''
   # Batch-Normalization
   不涉及到基本原理,基本原理见OneNote笔记
+  ### 普通神经网路
   ```python
   import tensorflow as tf
   import tensorflow.keras as keras
@@ -32,9 +33,37 @@ content: '''
   
   ```
   这时,我就很好奇了,对于input为10阶的数据,为什么BN有40个参数,理论上每个激活输出都有一个$\\gamma$和一个$\\beta$,应该有20个参数才对啊!!!
+  原因很简单,其中20个是`Trainable params`,即上面的$\\gamma$和$\\beta$,剩下20个参数为`Non-trainable params`,即是**期望**和**方差**
   
-  原因很简单,其中20个是`Trainable params`,即上面的$\\gamma$和$\\beta$,剩下20个参数为`Non-trainable params`,即是**期望**和**方差**,问题又来这,这个方差和期望应该各只有一个才对啊,为什么有十个方差,十个期望呢?!!?!?
+  问题又来这,这个方差和期望应该各只有一个才对啊,为什么有十个方差,十个期望呢?!!?!?
   **BN并不是计算隐层所有神经元的输出的方差与期望,而是统计第k的神经元n个不同batch的输出,将其作为作为一个集合,计算其方差与期望**
+  
+  ### 卷积神经网络
+  ```python
+  model = tf.keras.Sequential([
+      tf.keras.layers.Conv2D(3,(3,3)),
+      tf.keras.layers.BatchNormalization()
+  ])
+  model.build(input_shape=(1,5,5,3))
+  model.summary()
+  ```
+  ```
+  Model: "sequential"
+  _________________________________________________________________
+  Layer (type)                 Output Shape              Param #   
+  =================================================================
+  conv2d (Conv2D)              multiple                  84        
+  _________________________________________________________________
+  batch_normalization (BatchNo multiple                  12        
+  =================================================================
+  Total params: 96
+  Trainable params: 90
+  Non-trainable params: 6
+  _________________________________________________________________
+  ```
+  首先是,对CNN一直有个误解,貌似CNN里面也是有偏置项的,
+  - 3个3*3的卷积,没有偏置项的话有3(输入信道)*3(卷积核数)*3(卷积核长)*3(卷积核宽) = 81 并不等于84,加上三个偏置项正好等于84
+  - 在CNN中使用BN,BN参数应该是4*卷积核数,一半可训练,一半不可训练,集合S为当前卷积核的所有输出(不同batch的所有channel的激活输出)
 '''
 linesHighlighted: []
 isStarred: false
