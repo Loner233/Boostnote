@@ -1,0 +1,38 @@
+createdAt: "2019-09-05T02:21:21.383Z"
+updatedAt: "2019-09-05T02:51:45.356Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "tf.pow"
+tags: []
+content: '''
+  # tf.pow
+  
+  ```python
+  import tensorflow as tf
+  sess = tf.Session()
+  sess.run(tf.pow(2, 2))
+  ```
+  结果为4
+  
+  ```python
+  import tensorflow as tf
+  sess = tf.Session()
+  sess.run(tf.pow(2, 2.1))
+  ```
+  报错
+  
+  
+  ```python
+  import tensorflow as tf
+  sess = tf.Session()
+  sess.run(tf.pow(2.0, 2.1))
+  ```
+  结果为4.2870936
+  
+  为什么Tensorflow里满不能计算$2 ^ {2.1}$?
+'''
+linesHighlighted: [
+  3
+]
+isStarred: false
+isTrashed: false
