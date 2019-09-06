@@ -1,0 +1,34 @@
+createdAt: "2019-09-05T03:28:24.154Z"
+updatedAt: "2019-09-05T03:38:58.035Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "PostgreSQL"
+tags: []
+content: '''
+  # PostgreSQL
+  #### 登录数据库
+  ```shell
+  psql -U username -d db name -h hostname -p port
+  ```
+  **如果当前linux的用户正好是PostgreSQL的用户,且省去了`-U`参数,那么就是用当前linux用户来登录PostgreSQL数据库软件**
+  **如果存在与当前用户同名的数据库,则在省区`-d`参数时,会直接登录至用户同名数据库**
+  #### 执行sql文件
+  ```shell 
+  psql exampledb < exampledb.sql
+  ```
+  #### 控制台命令
+  - `\\password` 设置密码
+  - `\\q`        退出
+  - `\\h`        查看sql命令的解释,如`\\h select`
+  - `\\?`        查看sql命令列表
+  - `\\l`        列出所有数据库
+  - `\\c[database_name]` 连接其他数据库
+  - `\\d`        列出当前数据库的所有表
+  - `\\d[table_name]` 列出某张表的结构
+  - `\\du`       列出所有用户
+  - `\\e`        打开文本编辑器
+  - `\\conninfo` 列出当前数据库和连接的信息
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

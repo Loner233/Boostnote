@@ -1,0 +1,125 @@
+createdAt: "2019-09-05T06:28:04.516Z"
+updatedAt: "2019-09-06T02:30:13.654Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "MongoDB"
+tags: []
+content: '''
+  # MongoDB
+  ## 创建数据库
+  ```sql
+  use mydb
+  ```
+  使用`db`可以看到当前数据库为mydb
+  不过这样通过`show dbs`是看不到数据库的,因为`mydb`里面没有数据,所以并不会在数据库的列表中
+  
+  插入一条数据:
+  ```sql
+  db.mydb.insert({"name":"loner"})
+  ```
+  此时再`show dbs`,可以看到:
+  
+      > show dbs
+      admin   0.000GB
+      config  0.000GB
+      local   0.000GB
+      mydb    0.000GB
+      
+  ## 删除数据库
+  ```sql 
+  db.dropDatabase()
+  ```
+  
+  删除当前数据库
+  
+  ## 插入文档
+  MongoDB使用`insert()`或`save()`方法向集合中插入文档
+  ```sql
+  db.mydb.insert({title:"loner",age:123})
+  db.mydb.save({title:"loner",tags:['boy','NoSQL']})
+  ```
+  也可以将数据定义为一个变量
+  ```sql
+  data = ({title:"loner"})
+  ```
+  插入文档你也可以使用 db.col.save(document) 命令。如果不指定 _id 字段 save() 方法类似于 insert() 方法。如果指定 _id 字段，则会更新该 _id 的数据。
+  
+  ## 更新文档
+  可以使用`update`进行更新,函数原型为
+  ```sql
+  db.collection.update(criteria, objNew, upsert, multi)
+  ```
+  - `criteria` : update的查询条件，类似sql update查询内where后面的。
+  - `objNew` : update的对象和一些更新的操作符（如$,$inc...）等，也可以理解为sql update查询内set后面的
+  - `upsert` : 这个参数的意思是，如果不存在update的记录，是否插入objNew,true为插入，**默认是false**，不插入。
+  - `multi` : **默认是false**,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新。
+  
+  插入一条数据
+  ```
+  person = ({"name":"loner"})
+  db.mydb.insert(person)
+  db.mydb.find()
+  ```
+      { "_id" : ObjectId("5d71bb66107c4f5c5d476598"), "name" : "loner" }
+  ```sql
+  person2 = ({name:"loner233"})
+   db.mydb.update({"name":"loner"},person2)
+  ```
+      WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+  
+  ## 删除文档
+  ```sql
+  db.mydb.remove(query,justOne,writeConcern)
+  ```
+  - query :（可选）删除的文档的条件。
+  - justOne : （可选）如果设为 true 或 1，则只删除一个文档。
+  - writeConcern :（可选）抛出异常的级别。
+  删除全部
+  ```sql
+  db.mydb.remove({}) 
+  ```
+  
+  ## 查询文档
+  ```sql
+  db.mydb.find().pretty()
+  ```
+  `pretty()`方法以格式化的方式来显示所有文档
+  
+  - 等于 
+  ```sql 
+  db.mydb.find({"name":"loner"}).pretty()
+  ```
+  - 小于
+  ```sql
+  db.mydb.find({"age":{$lt:18}}).pretty()
+  ```
+  - 小于或等于
+  ```sql
+  db.mydb.find({"age":{$lte:18}}).pretty()
+  ```
+  - 大于
+  ```sql
+  db.mydb.find({"age":{$gt:18}}).pretty()
+  ```
+  - 大于或等于
+  ```sql
+  db.mydb.find({"age":{$gte:18}}).pretty()
+  ```
+  - 不等于
+  ```sql
+  db.mydb.find({"age":{$ne:50}}).pretty()
+  ```
+  
+  - and
+  ```sql
+  db.mydb.find({"name":"loner","age":18}).pretty()
+  ```
+  - or
+  ```sql
+  db.mydb.find({$or:[{"name":"loner"},{"name":"jack"}]}).pretty()
+  ```
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
