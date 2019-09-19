@@ -1,5 +1,5 @@
 createdAt: "2019-09-18T09:23:08.050Z"
-updatedAt: "2019-09-18T09:25:24.331Z"
+updatedAt: "2019-09-19T08:17:10.434Z"
 type: "MARKDOWN_NOTE"
 folder: "e6ce7f6bbed693c566de"
 title: "Nginx 配置"
@@ -29,8 +29,7 @@ content: '''
       }
   
       client_max_body_size 50m;
-  }
-  ~     
+  }  
   ```
   
   #### 80转443
