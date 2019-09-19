@@ -1,0 +1,15 @@
+createdAt: "2019-09-12T06:40:16.139Z"
+updatedAt: "2019-09-12T08:58:36.099Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "data.generator的"
+tags: []
+content: '''
+  ## data.generator的
+  在keras中有时候通过`tf.keras.preprocessing.image.ImageDataGenerator`来实例化一个图像数据生成器!
+  这个`ImageDataGenerator`有很多属性,包括并不限于数据增强,数据归一化等
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

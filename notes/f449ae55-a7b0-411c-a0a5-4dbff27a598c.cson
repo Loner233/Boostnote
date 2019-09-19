@@ -1,5 +1,5 @@
 createdAt: "2019-06-11T01:10:24.671Z"
-updatedAt: "2019-06-11T03:02:04.401Z"
+updatedAt: "2019-09-19T03:01:21.472Z"
 type: "MARKDOWN_NOTE"
 folder: "9bf72d6668381ae56e61"
 title: "Iptable的用法"
@@ -80,74 +80,6 @@ content: '''
   **DNAT**:目标地址转换。
   **REDIRECT**:在本机做端口映射。
   **LOG**:在/var/log/meessages文件中记录日志信息，然后再把数据包传递给下一条规则，也就是说除了记录意外不对数据包做任何其他操作。
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
 '''
 linesHighlighted: [

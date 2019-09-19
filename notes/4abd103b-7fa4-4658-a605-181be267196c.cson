@@ -1,5 +1,5 @@
 createdAt: "2019-07-08T03:02:58.977Z"
-updatedAt: "2019-07-08T03:39:25.660Z"
+updatedAt: "2019-09-19T02:25:21.868Z"
 type: "MARKDOWN_NOTE"
 folder: "cab491cd31795b9833d0"
 title: "LSTM"
@@ -10,7 +10,7 @@ content: '''
   # LSTM 
   ### 普通RNN
   
-  ![https://pic4.zhimg.com/80/v2-f716c816d46792b867a6815c278f11cb_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/bc047e94.jpg)
+  ![bc047e94.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/553cd0a3.jpg)
   
   其中：
   - $x$表示当前状态的数据输入
@@ -20,7 +20,7 @@ content: '''
   
   ### long short term memory，LSTM
   
-  ![https://pic4.zhimg.com/80/v2-e4f9851cad426dfe4ab1c76209546827_hd.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/3e93a79e.jpg)
+  ![3e93a79e.jpg](:storage/4abd103b-7fa4-4658-a605-181be267196c/24d8b2fd.jpg)
   
   显然,  LSTM有两个传递状态，一个$c^t$(cell state)和一个$h^t$（hidden state）   (tip:RNN中的$h^t$想对于LSTM中的$c^t$)
   
