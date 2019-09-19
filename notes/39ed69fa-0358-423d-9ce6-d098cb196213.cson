@@ -1,0 +1,65 @@
+createdAt: "2019-09-19T06:32:32.739Z"
+updatedAt: "2019-09-19T06:47:21.992Z"
+type: "MARKDOWN_NOTE"
+folder: "b66b6623f3244c4c18d6"
+title: "RLE functions - Run Lenght Encode & Decode"
+tags: []
+content: '''
+  ### RLE functions - Run Lenght Encode & Decode
+  这次kaggle有两个目标检测的题目，给的数据是一个csv文件表示检测到的对象和被检测的原始图像
+  这个scv文件很奇怪
+  |图片id|EncodePixels|
+  |----|----|
+  |1_1|1 2 3 10|
+  |1_2|8 10 4 20|
+  |1_3|None|
+  
+  **图片id**表示1号图检测到1、2、3类的对象
+  **EncodePixels**表示被检测到的像素的编码
+  *具体编码方式:*
+  假如一张100×100×3的图片，那么它的一类目标的mask就是100×100×1，
+  此时将100×100×1的mask展平，那么就成了10000×1的向量，
+  EncodePixels的奇数项表示起点，偶数项表示长度，
+  1 2 7 10表示10000×1的向量从第一个点起及后面两个点都是1,第七个点起后面10个点都是1,其余全是0
+  我觉得这种编码很有意思，kaggle上也有人给出了具体Encode & Decode的方法
+  ```python
+  import pandas as pd
+  import numpy as np
+  
+  train = pd.read_csv('../input/train.csv')
+  
+  def mask2rle(img):
+      \'''
+      img: numpy array, 1 - mask, 0 - background
+      Returns run length as string formated
+      \'''
+      pixels= img.T.flatten()
+      pixels = np.concatenate([[0], pixels, [0]])
+      runs = np.where(pixels[1:] != pixels[:-1])[0] + 1
+      runs[1::2] -= runs[::2]
+      return ' '.join(str(x) for x in runs)
+   
+  def rle2mask(mask_rle, shape=(1600,256)):
+      \'''
+      mask_rle: run-length as string formated (start length)
+      shape: (width,height) of array to return 
+      Returns numpy array, 1 - mask, 0 - background
+  
+      \'''
+      s = mask_rle.split()
+      starts, lengths = [np.asarray(x, dtype=int) for x in (s[0:][::2], s[1:][::2])]
+      starts -= 1
+      ends = starts + lengths
+      img = np.zeros(shape[0]*shape[1], dtype=np.uint8)
+      for lo, hi in zip(starts, ends):
+          img[lo:hi] = 1
+      return img.reshape(shape).T
+  
+  # Test RLE functions
+  assert mask2rle(rle2mask(train['EncodedPixels'].iloc[0]))==train['EncodedPixels'].iloc[0]
+  assert mask2rle(rle2mask('1 1'))=='1 1'
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
