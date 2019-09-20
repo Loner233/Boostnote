@@ -1,0 +1,43 @@
+createdAt: "2019-09-20T01:50:11.670Z"
+updatedAt: "2019-09-20T03:00:28.508Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "图像分割的损失函数"
+tags: []
+content: '''
+  # 图像分割的损失函数
+  ### Cross Entropy(交叉熵)
+  假设真实概率:
+  - $P(Y = 0) = p$
+  - $P(Y = 1) = 1 - p$
+  
+  预测概率为:
+  - $P(\\hat{Y} = 0) = \\frac{1}{1 + e^{-x}} = \\hat{p}$
+  - $P(\\hat{Y} = 1) = 1 - \\frac{1}{1 + e^{-x}} = 1 - \\hat{p}$
+  
+  交叉熵被定义为:
+  $$CE(p,\\hat{p}) = -(p\\log{\\hat{p}}+(1 - p)\\log{(1 - \\hat{p})})$$
+  
+  tips:
+  - 在`Keras`中,这个损失被定义为`binary_crossentropy(y_true, y_pred)`
+  - 在`TensorFlow`,被定义为`softmax_cross_entropy_with_logits_v2`
+  
+  
+  ### Weighted cross entropy(带权交叉熵)
+  将所有的positive样本都通过系数$\\beta$赋予一个权重
+  在一些样本类别不均衡的数据中,例如一张图片90%是黑像素,10%是白像素,普通的交叉熵效果不一定很好,所以定义了如下的带权交叉熵
+  $$WCE(p,\\hat
+  {p}) = -(\\beta p\\log{\\hat{p}} + (1 - p)\\log{(1 - \\hat{p})})$$
+  - 当$\\beta > 1$时,会减少false negatives
+  - 当$\\beta < 1$时,会减少false positives
+  
+  tips:
+  - 在`TensorFlow`中,该损失被定义为:`weighted_cross_entropy_with_logits`
+  - 在`Keras`中没有定义,需要自己实现,实现如下
+  ```python
+  
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

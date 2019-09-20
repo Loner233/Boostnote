@@ -1,0 +1,165 @@
+createdAt: "2019-09-20T03:00:30.491Z"
+updatedAt: "2019-09-20T07:34:13.918Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "Tensorflow几个交叉熵"
+tags: []
+content: '''
+  # Tensorflow几个交叉熵
+  Tensorflow中提供了几个交叉熵的实现,分别是
+  - `sigmoid_cross_entropy_with_logits`
+  - `sparse_softmax_cross_entropy_with_logits`
+  - `weighted_cross_entropy_with_logits`
+  - `softmax_cross_entropy_with_logits`
+  
+  ## sigmoid_cross_entropy_with_logits
+  函数签名:
+  ```python
+  tf.nn.sigmoid_cross_entropy_with_logits(
+      labels=None,
+      logits=None,
+      name=None
+  )
+  ```
+  - `logits`一个`Tensor`,
+  **假如说是二分类问题,而输出层包含一个神经元,那么logits就是这一个神经元的真实输出,这个损失函数会对其进行sigmoid操作转换成概率**
+  - `labels`一个`Tensor`,和`logits`有相同shape,在多分类问题中一般都是one-hot编码
+  - `name`可选的操作名称
+  
+  假设二分类问题
+  数据集有十个数据10,
+  神经网络最后一层输出为[4, 4, 4, 4, 4, -1, -1, -1, -1, -1]
+  真实样本标签为[1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+  ```python
+  import tensorflow as tf
+  import numpy as np 
+  logits = np.asarray([3,3,3,3,3,-3,-3,-3,-3,-3], dtype=np.float32) 
+  y = np.asarray([1, 1, 1, 1, 1, 0, 0, 0, 0, 0], dtype=np.float32) 
+  
+  def sigmoid(x): 
+      return 1.0 / (1 + np.exp(-x)) 
+      
+  ce = -(y * np.log(sigmoid(logits)) + (1 - y) * np.log(1 - sigmoid(logits)))
+  ce2 = tf.nn.sigmoid_cross_entropy_with_logits(y, logits)
+  
+  print(ce)
+  print(ce2.numpy())
+  ```
+  
+  **其中`ce2.numpy()`和`ce`是非常接近的,但是不完全相等,可能是浮点数数位不一致导致的精度问题,有待验证**
+  
+  **还有一个需要特别关注的点,这也是我最后一层神经元输出假设没取很大负数的原因,就是很可能会出现分母为0的错误,而sigmoid_cross_entropy_with_logits提供了防止溢出的机制,具体如下**
+  假设`x = logits`,`z = labels`,首先先简化交叉熵的计算
+  $$ce = z * -\\log(sigmoid(x)) + (1 - z) * -\\log(1 - sigmoid(x))$$
+  $$ce = z * -\\log{\\frac{1}{(1 + e^{-x})}} + (1 - z) * -\\log{\\frac{e^{-x}}{1 + e^{-x}}}$$
+  $$ce = z * \\log{(1 + e^{-x})} + (1 - z) * (-\\log{e^{-x}} + \\log{(1 + e^{-x})})$$
+  $$ce = z * \\log{(1 + e^{-x})} + (1 - z) * (x + \\log(1 + e^{-x}))$$
+  $$ce = (1 - z) * x + log(1 + e^{-x})$$
+  $$ce = x - z * x + log(1 + e^{-x})$$
+  经过这么转换,分布为0的问题解决了,但是又引入了新问题,$e^{-x}$在$x < 0$时可能会发生溢出.从而需要进行进一步调整
+  $$ce = x - z * x + log(1 + e^{-x})$$
+  $$ce = \\log(e^x) - z * x + log(1 + e^{-x})$$
+  $$ce = -x * z + \\log{(1 + e^x)} $$
+  这样在$x < 0$时就不会发生溢出了
+  综上,为了兼顾$x < 0$以及$x > 0$,最终交叉熵表示为:
+  $$max(x, 0) - x * z + \\log{(1 + e^{|x|})}$$
+  
+  ## softmax_cross_entropy_with_logits
+  函数签名为:
+  ```ptyhon
+  tf.nn.softmax_cross_entropy_with_logits(
+      labels,
+      logits,
+      axis=-1,
+      name=None
+  )
+  ```
+  参数与上面的相似,多的一个`axis`表示哪一个维度表示类别,默认为-1表示最后一个维度使代表类别
+  在多分类问题中,类别必须是互斥的.
+  假设十分类的问题
+  数据集有3条数据
+  类别经过one-hot编码,分别为[[0,0,1],[0,1,0],[1,0,0]]
+  输出层有三个神经元,针对三条数据的输出分别为[[1,2,3],[1,3,2],[3,2,1]]
+  ```python
+  import tensorflow as tf
+  import numpy as np
+  import pandas as pd
+   
+  y = np.array([[0,0,1],[0,1,0],[1,0,0]], dtype=np.float64)
+  logits = np.array([[1,2,3],[1,3,2],[3,2,1]], dtype=np.float64)
+   
+  def softmax(x):
+      sum_raw = np.sum(np.exp(x), axis=-1)
+      x1 = np.ones(x.shape)
+      for i in range(np.shape(x)[0]):
+          x1[i] = np.exp(x[i]) / sum_raw[i]
+      return x1
+  
+  ce1 = np.sum(-y * np.log(softmax(logits)),axis=-1)
+  ce2 = tf.nn.softmax_cross_entropy_with_logits(y, logits)
+  print(ce1)
+  print(ce2.numpy())
+  ```
+  在这边使用`np.float64`,两种输出是一致的,同时我也把上面的类型尝试了`float64`,结果也是完全一致的,这个问题有待再进一步讨论.
+  ## sparse_softmax_cross_entropy_with_logits
+  函数签名为:
+  ```python
+  tf.nn.sparse_softmax_cross_entropy_with_logits(
+      labels,
+      logits,
+      name=None
+  )
+  ```
+  非常像上面的,
+  - `logits` 还是同`softmax_cross_entropy_with_logits`的`logtis`一样
+  区别在于,
+  - 这边的labels传入的使所索引,范围为`[0, num_classes)`
+  - `dtype`一般为`int32`或者`int64`
+  ```python
+  import tensorflow as tf
+  import numpy as np
+  import pandas as pd
+   
+  y = np.array([2, 1, 0], dtype=np.int32)
+  logits = np.array([[1,2,3],[1,3,2],[3,2,1]], dtype=np.float64)
+   
+  ce2 = tf.nn.sparse_softmax_cross_entropy_with_logits(y, logits)
+  print(ce.numpy())
+  ```
+  这边数据使按`softmax_cross_entropy_with_logits`调整, 得出结果也和上面一致.
+  
+  ## weighted_cross_entropy_with_logits
+  函数签名如下:
+  ```python
+  tf.nn.weighted_cross_entropy_with_logits(
+      labels,
+      logits,
+      pos_weight,
+      name=None
+  )
+  ```
+  `labels`:同上
+  `logits`:同`sigmoid_cross_entropy_with_logits`
+  `pos_wegith`:一个用在正样本上的系数
+  
+  原始交叉熵:
+  `labels * -log(sigmoid(logits)) + (1 - labels) * -log(1 - sigmoid(logits))`
+  带权交叉熵
+  `labels * -log(sigmoid(logits)) * pos_weight + (1 - labels) * -log(1 - sigmoid(logits))`
+  当`pos_weight > 1`时,减少*flase negative*的数量,增加recall,当`pos_weight < 1`使,减少*false positive*的数量,增加precision
+  
+  令$x=logits,z=labels,q=pos_weight$,可化简损失为:
+  $$wce = -q * z * \\log{(sigmoid(x))} - (1 - z) * \\log{(1 - sigmoid(x))}$$
+  $$wce = -q * z * \\log{(\\frac{1}{1 + e^{-x}})} - (1 - z) * \\log{(\\frac{e^{-x}}{1 + e^{-x}})}$$
+  $$wce = q * z * \\log{(1 + e^{-x})} - (1 - z) * (\\log{(e^{-x})} - \\log{(1 + e^{-x})})$$
+  $$wce = q * z * \\log{(1 + e^{-x})} + (1 - z) * (x + \\log{(1 + e^{-x})})$$
+  $$wce = (1 - z) * x + (q * z + 1 - z) * \\log{(1 + e^{-x})}$$
+  $$wce = (1 - z) * x + ((q - 1) * z + 1) * \\log{(1 + e^{-x})}$$
+  令$l = (1 + (q - 1) * z)$,同时为了防止溢出,改写为如下形式:
+  $$wce = (1 - z) * x + l * (log(1 + e^{-|x|})) + \\max(-x, 0)$$
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
