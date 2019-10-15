@@ -1,0 +1,65 @@
+createdAt: "2019-10-15T09:05:37.505Z"
+updatedAt: "2019-10-15T09:27:08.417Z"
+type: "MARKDOWN_NOTE"
+folder: "3ed9013aac4316501eaf"
+title: "上下文管理器"
+tags: []
+content: '''
+  # 上下文管理器
+  `with`是最广泛使用的上下文管理器。
+  ```python
+  with open("test/test.txt", "w") as f:
+      f.write("hello")
+  ```
+  这个比使用下面的方便多了
+  ```python
+  try:
+  except:
+  finally:
+      f.close()
+  ```
+  
+  ### 自定义上下文管理器
+  ```python
+  class MyResource:
+      # __enter__ 返回的对象会被with语句中as后的变量接受
+      def __enter__(self):
+          print('connect to resource')
+          return self
+  
+      def __exit__(self, exc_type, exc_value, tb):
+          print('close resource conection')
+  
+      def query(self):
+          print('query data')
+  ```
+  **`with`代码之行前，会执行`__enter__`，返回值将赋给`with`句中`as`后的变量**
+  **`with`后的代码块执行结束或者出错，会执行`__exit__`**
+  
+  ### 使用`contextmanager`
+  ```python
+  from contextlib import contextmanager
+  class MyResource:
+      def query(self):
+          print('query data')
+  
+  @contextmanager
+  def make_myresource():
+      print('start to connect')
+      yield MyResource()
+      print('end connect')
+      pass
+  ```
+  被装饰器装饰的代码可以分成三部分：
+  __1__.with语句中的代码块执行前执行函数中yield之前代码 
+  __2__.yield返回的内容复制给as之后的变量 
+  __3__.with代码块执行完毕后执行函数中yield之后的代码
+  ```python
+  with make_myresource() as myresource:
+      myresource.query()
+  ```
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

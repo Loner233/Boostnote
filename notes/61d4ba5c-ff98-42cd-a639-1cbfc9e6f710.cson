@@ -1,0 +1,21 @@
+createdAt: "2019-10-14T02:35:45.091Z"
+updatedAt: "2019-10-14T02:37:16.193Z"
+type: "MARKDOWN_NOTE"
+folder: "9bf72d6668381ae56e61"
+title: "华为路由器debug"
+tags: []
+content: '''
+  ## 华为路由器debug
+  
+  今天怕排查了下l2tp的故障，虽然并不知道到底发生了生么，但是用到了debug模式，得知了是ipsec的问题。
+  ```bash
+  <Huawei> terminal monitor
+  <Huawei> terminal debugging
+  <Huawei> debugging l2tp all
+  <Huawei> debugging ppp all
+  <Huawei> debugging ipsec all
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

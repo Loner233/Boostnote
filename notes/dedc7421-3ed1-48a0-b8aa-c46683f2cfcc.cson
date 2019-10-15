@@ -1,0 +1,68 @@
+createdAt: "2019-09-24T07:30:59.135Z"
+updatedAt: "2019-09-24T07:50:50.301Z"
+type: "MARKDOWN_NOTE"
+folder: "91678286fbe5c256d96d"
+title: "使用Eager模式训练线性回归"
+tags: []
+content: '''
+  # 使用Eager模式训练线性回归
+  所谓**Eager模式**就是可以立即执行tensorflow代码，从这个特点也可以看出，向来不支持动态图的tensorflow也终于支持动态图了，据说调试tf代码也可以用原生的python调试器了。
+  以下用tensorflow的eager模式来写了一个线性回归的Demo
+  
+  ```python
+  import tensorflow as tf
+  import numpy as np
+  tf.enable_eager_execution()
+  ```
+  首先引入tensorflow，开启Eage执行模式，（`tf.enable_eager_execution()`只能在最开始执行，且开启后不能关闭）
+  
+  ```python
+  real_w = tf.reshape(tf.constant(np.linspace(0.0,10.0,10,False), dtype=np.float32),[10,1])
+  ```
+  表示真实的权重，最后一位作为偏置项。
+  
+  ```python
+  x = tf.random_normal([1000,9], dtype=np.float32)
+  bias_one = tf.reshape(tf.constant([1] * 1000,dtype=np.float32), [1000,1])
+  tx = tf.concat([x, bias_one], axis=-1)
+  ```
+  产生数据（1000×10），每一行最后一位都是1,所以$w * x$就相当于，前面九个是权重乘数据，最后一位是偏置。
+  ```python
+  real_y = tf.matmul(tx, real_w)
+  ```
+  计算获得真实的y
+  
+  ```python
+  w = tf.Variable(tf.random_normal([10,1]))
+  optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)
+  ```
+  定义变量和优化器
+  
+  ```python
+  def train_step():
+      with tf.GradientTape() as tape:
+          loss = tf.reduce_mean(tf.pow(tf.matmul(tx,w) - real_y, 2))
+          gradient = tape.gradient(loss,w)
+          optimizer.apply_gradients([(gradient,w)])
+  ```
+  定义每一步的优化方案，上面损失就是所谓的*残差平方和*，然后计算关于$w$的梯度，最后使用优化器将梯度更新至变量
+  
+  ```python
+  for epoch in range(20):
+      train_step()
+  ```
+  通过20个epoch来训练
+  
+  ```python
+  import pandas as pd
+  df = pd.DataFrame()
+  df["real_w"] = real_w.numpy().flatten()
+  df["w"] = w.numpy().flatten()
+  df["diff"] = abs(df["real_w"]  - df["w"] )
+  df
+  ```
+  来看一看，最后的训练结果！
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
