@@ -1,0 +1,18 @@
+createdAt: "2019-10-25T09:12:34.894Z"
+updatedAt: "2019-10-25T09:14:41.668Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "设计模式"
+tags: []
+content: '''
+  ## 设计模式
+  #### 单例模式
+  __1__.单例类只有一个对象
+  __2__.单例对象必须由该单例类自行创建
+  __3__.单例类对外提供一个访问该单例的全局访问点
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

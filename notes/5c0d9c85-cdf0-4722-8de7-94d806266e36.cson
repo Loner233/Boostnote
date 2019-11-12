@@ -1,0 +1,200 @@
+createdAt: "2019-11-05T01:47:54.369Z"
+updatedAt: "2019-11-05T09:30:37.802Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "Protocol Buffer(proto3)"
+tags: []
+content: '''
+  ## Protocol Buffer(proto3)
+  #### 定义一个Message Type
+  以下是一个搜索的请求
+  ```proto
+  syntax = "proto3"
+  
+  message SearchRequest {
+      string query = 1;
+      int32 page_number = 2;
+      int32 result_per_page = 3;
+  }
+  ```
+  - 第一行表明使用的是`proto3`代码，如果不表明是`proto3`,编译器会默认识别为`proto2`（这个必须是文件非空非注释的第一行）
+  - `SearchReuqest`消息的定义表明其有三个field(name/value pairs），每一个都是表明想要添加到message里面的数据
+  - 这面指明了两个integer的类型和一个string的类型
+  - 由上可见，在message的定义中的没一个field都有一个唯一的数字，这是用来在**message binary format**中判别field,一旦message启用，这个就不该修改。
+  - 上述唯一数字，1-15由一个byte编码，16-2047由两个byte编码，所以常用的field应该尽量使用1-15来进行编码，同时也要注意为未来可能要添加field留出相应的空间
+  
+  #### Field的规则
+  - `singular`:一个写的好的message有一个或没有这个field，这个是`proto3`默认的field规则
+  - `repeated`:这个field可以重复任何次（包括0次），顺序会被保存，在`proto3`中，`repeated`默认的是的scalar numeric type使用的是`packed`编码
+  
+  #### 添加注释
+  `proto`文件使用`C/C++`样式的注释`//`和`/*...*/`
+  
+  #### 保留的field
+  有可能`proto`文件被修改该了，一个message中删掉了一个field，那么当未来用户重复使用之前删掉的field的number的时候就能会导致一些问题的产生，这时候就出现了保留Field防止这些被删了field被误用
+  ```proto
+  message Foo {
+      reserved 2, 15, 9 to 11;
+      reserved "foo", "bar";
+  }
+  ```
+  
+  #### 标量值的类型
+  .proto Type|C++ Type|Java Type|Python Type|Go Type|Ruby Type|C# Type|PHP Type|Dart Type
+  ---|---|---|---|---|---|---|---|---
+  double|double|double|float|float64|Float|double|float|double
+  float|float|float|float|float32|Float|float|float|double
+  int32|int32|int|int|int32|Fixnum or Bignum|int|integer|int
+  int64|int64|long|int/long|int64|Bignum|long|integer/string|Int64
+  uint32|uint32|int|int/long|uint32|Fixnum or Bignum|uint|integer|int
+  uint64|uint64|long|int/long|uint64|Bignum|ulong|integer/string|Int64
+  sint32|int32|int|int|int32|Fixnum or Bignum|int|integer|int
+  sint64|int64|long|int/long|int64|Bignum|long|integer/string|Int64
+  fixed32|uint32|int|int/long|uint32|Fixnum or Bignum|uint|integer|int
+  fixed64|uint64|long|int/long|uint64|Bignum|ulong|integer/string|Int64
+  sfixed32|int32|int|int|int32|Fixnum or Bignum|int|integer|int
+  sfixed64|int64|long|int/long|int64|Bignum|long|integer/string|Int64
+  bool||bool|boolean|bool|bool|TrueClass/FalseClass|bool|boolean|bool
+  string|string|String|str/unicode|string|String|string|string|String
+  bytes|string|ByteString|str|[]byte|String|ByteString|string|List\\<int\\>
+  
+  ##### 默认值
+  - string，默认值为空字符串
+  - bytes，默认值为空字节
+  - bools，默认值为false
+  - 数字类型，默认值为0
+  - enums, 默认值是地一个被定义的enum的值
+  
+  #### Enumerations
+  ```proto
+  message SearchRequest {
+      string query = 1;
+      int32 page_number = 2;
+      int32 result_per_page = 3;
+      enum Corpus{
+          UNIVERSAL = 0;
+          WEB = 1;
+          IMAGES = 2;
+          LOCAL = 3;
+          NEWS = 4;
+          PRODUCTS = 5;
+          VIDEO = 6;
+      }
+      Corpus corpus = 4;
+  }
+  ```
+  上面Corpus的地一个变量指向了0, 每个enum的定义必须包含一个会映射到0来表示这是地一个元素，因为：
+  - 必须有一个zero value, 所以可以使用0来做为数字类型的默认值
+  - 0值需要作为第一个元素，为了兼容`proto2`
+  
+  #### 使用其他的message类型
+  ```proto
+  message Result {
+      string url = 1;
+      string title = 2;
+      repeated string snippets = 3;
+  }
+  
+  message SearchResponse {
+      repeated Result results = 1;
+  }
+  ```
+  
+  ##### 导入定义
+  像上述例子，如果Result不是定义在一个文件里面，而是定义在另一个`.proto`文件里面的话就需要通过`import`来导入进来
+  ```proto
+  import "myproject/other_protos.proto";
+  ```
+  有时候可能会有`A import B`，`B import C`，此时A是不能使用C中的定义的。
+  ```proto
+  // new.proto
+  // 一些定义
+  ```
+  ```proto
+  // old.proto
+  import public "new.proto";
+  import "other.proto";
+  ```
+  ```proto
+  // client.proto
+  import "old.proto"
+  // 可以使用'old.proto'和'new.proto'中的定义，但是不能使用‘other.proto‘中的定义
+  ```
+  protocol的编译器会在`-I`/`--proto_path`表明的文件夹中搜索要`import`的文件，如果没有指明，则会搜索编译器所在文件夹，若想搜索所有的imports，可以将`--proto_path`设置成项目的根！
+  - 可以在proto3中导入proto2中的message类型，但是proto2中的enums不能在proto3中直接使用
+  
+  #### 类型的嵌套
+  是可以如下一样类型嵌套的
+  ```proto
+  message SearchResponse {
+      message Result {
+          string url = 1;
+          string title = 2;
+          repeated string snippets = 3;
+      }
+      repeated Result results = 1;
+  }
+  ```
+  在外面通过父消息类型重复使用消息类型
+  ```proto
+  message SomeOtherMessage {
+      SearchResponse.Result result = 1;
+  }
+  ```
+  可以像下面一样嵌套
+  ```proto
+  message Outer{
+      message MiddleAA {
+          message Inner {
+              int64 ival = 1;
+              bool booly = 2;
+          }
+      }
+      message MiddleBB {
+          message Inner {
+              int32 ival = 1;
+              bool booly = 2;
+          }
+      }
+  }
+  ```
+  
+  #### 更新一个消息类型
+  如果一个message不再符合要求，并且还想使用旧的proto创建的代码的话，需要遵守如下一些规则：
+  - 不要修改任何已经存在的field的number
+  - 如果增加了新的field，那么使用就的message格式的代码序列化的message能够被新message生成的代码解析，所以需要记住一些类型的默认值，同样的由新的代码创建的message仍能被就的代码解析，旧的二进制代码在解析的时候会直接忽略掉新增的field。
+  - 如果在更新的massage类型中field number不再使用，那么这个field就能被移除了，**建议方法：通过rename来代替remove，增加一个前缀“OBSOLETE_”**
+  - `int32`,`uint32`,`int64`,`uint64`还有`bool`都是兼容的，这意味着可以将其中的一个直接转换到另一个
+  - `sint32`和`sint64`互相兼容，但是与其他整型类型不兼容
+  - `string`和`bytes`互相兼容，前提是`bytes`是有效的UTF-8
+  - 嵌入的message和`bytes`互相兼容，前提是`bytes`包含message编码后的结果
+  - `fixed32`和`sfixed32`兼容，`fiexed64`和`sfixed64`兼容
+  - `enum`兼容于在线性方面的`int32`,`uint32`,`int64`和`uint64`
+  - Changing a single value into a member of a new oneof is safe and binary compatible
+  
+  
+  #### Any
+  `Any`message类型可以让你使用message作为嵌入类型，而不需要他们的`.proto`定义，若要使用`Any`类型，要导入`google/protobuf/any.proto`
+  ```proto
+  import "google/protobuf/any.proto";
+  message ErrorStatus {
+      string message = 1;
+      repeated google.protobuf.Any details = 2;
+  }
+  ```
+  #### Oneof
+  若有个message有多个field，并且在同一时刻有至少一个field被设置，那么可以使用`Oneof`来限制这种行为并且节约内存
+  ```proto
+  message SampleMessage {
+      oneof test_oneof {
+          string name = 4;
+          SubMessage sub_message = 9;
+      }
+  }
+  ```
+  可以在除了`repeated`的任何类型上面使用
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
