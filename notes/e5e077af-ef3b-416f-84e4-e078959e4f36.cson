@@ -1,0 +1,76 @@
+createdAt: "2019-11-13T01:43:47.295Z"
+updatedAt: "2019-11-13T02:09:48.869Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "Scala中的@specialized"
+tags: []
+content: '''
+  ## Scala中的@specialized
+  `@specialized` 由`Scala 2.8`中加入，为了解决由于范型擦除而需要对基础数据进行装箱/拆箱操作所带来的性能问题。
+  
+  #### 拆箱和装箱
+  `Java/Jvm`的范型是类型擦除的，也就是说范型在编译是会被丢弃，全部向上转型为`Object`，因此对基础数据类型(`primitive`)来说，无法直接使用基础数据类型作为范型参数。
+  比如，`List<int>`是不可行的，所以就产生了`Box`(装箱)和`UnBox`（拆箱），将`int`装箱为`Integer`，将`double`装箱为`Double`等等
+  
+  #### 存在的问题
+  会导致内存的增加，`double`本身只需要8个字节，而装箱后的`Double`,将需要24个字节，对于一些庞大的应用来说，可能导致内存出现性能瓶颈。
+  
+  #### Scala的改进
+  `Scala`需要编译为Java字节码，因此也就继承了`Java/JVM`的缺陷，为了改进这个缺陷，`Scala`增加了`@specialized`注解，来指示`Scala`编译器来规避这个问题
+  - 定义
+  ```scala
+  class specialized(group:SpecializedGroup) extends scala.annotation.StaticAnnotation{
+      def this(types: Specializable*) = this(new Group(types.toList))
+      def this() = this(Primitives)
+  }
+  ```
+  - 没加注解的
+  ```scala
+  import scala.{specialized => sp}
+  trait demo[T] {
+      def foo(x: T) = ???
+  }
+  ```
+  - 加上注解的
+  ```scala
+  import scala.{specialized => sp}
+  trait demo[@sp(Int) T]{
+      def foo(x: T) = ???
+  }
+  ```
+  分别进行`scalac -print`，结果分别如下：
+  - 未加注解
+  ```scala
+  [[syntax trees at end of                   cleanup]] // demo.scala
+  package <empty> {
+    abstract trait demo extends Object {
+      def foo(x: Object): Nothing = scala.Predef.???();
+      def /*demo*/$init$(): Unit = {
+        ()
+      }
+    }
+  }
+  ```
+  - 加上注解
+  ```scala
+  [[syntax trees at end of                   cleanup]] // demo.scala
+  package <empty> {
+    abstract trait demo extends Object {
+      def foo(x: Object): Nothing = scala.Predef.???();
+      <specialized> def foo$mcI$sp(x: Int): Nothing = demo.this.foo(scala.Int.box(x));
+      def /*demo*/$init$(): Unit = {
+        ()
+      }
+    };
+    abstract <specialized> trait demo$mcI$sp extends Object with demo {
+      override <specialized> def foo(x: Int): Nothing = demo$mcI$sp.this.foo$mcI$sp(x);
+      override <specialized> def foo$mcI$sp(x: Int): Nothing = scala.Predef.???()
+    }
+  }
+  ```
+  显然，加上了注解之后特化了一个`Int`版本的.
+  注意点，如果存在范型依赖，被依赖中的范型没有设置`specialized`,就算设置了，也不会被特化，存在一定的局限性。
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
