@@ -1,0 +1,27 @@
+createdAt: "2019-11-22T03:17:49.373Z"
+updatedAt: "2019-11-22T03:34:49.802Z"
+type: "MARKDOWN_NOTE"
+folder: "cab491cd31795b9833d0"
+title: "softmax的溢出问题"
+tags: []
+content: '''
+  # softmax的溢出问题
+  在上次实现softmax regression的时候就遇到了softmax溢出，导致了nan的问题，当时做了点优化，但是还是有一定的几率出现溢出的情况，这次正好看到一个softmax的实现，感觉很奇怪，尝试了一下，竟然没有溢出，具体原理to be continue....
+  
+  
+  ```python
+  # 普通的softmax的实现
+  def softmax(x):
+      e_x = np.exp(x)
+      return e_x / e_x.sum(axis=0)
+      
+  # 可以防止溢出的softmax的实现
+  def softmax(x):
+      e_x = np.exp(x - np.max(x))
+      return e_x / e_x.sum(axis=0)
+      
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

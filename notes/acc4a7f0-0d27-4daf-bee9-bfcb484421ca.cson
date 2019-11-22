@@ -1,0 +1,59 @@
+createdAt: "2019-11-14T01:55:23.751Z"
+updatedAt: "2019-11-14T02:04:26.768Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "Pandas减少DataFrame的内存占用"
+tags: []
+content: '''
+  # Pandas减少DataFrame的内存占用
+  今天在kaggle看到了别人的kernel，里面写了一种减少DataFrame内存占用的方法。
+  
+  具体操作其实很简单，在可以表示的范围内，用占位更小的`int8`来表示`int16`、`int16`来表示`int32`，`float`也同理。
+  
+  这都是有一个前提，就是在能够表示的范围内，如果一个超出`int8`表示范围的`int16`的数用`int8`来表示，那肯定会造成错误！所以关键就在于如何判断范围了。
+  ```python
+  def reduce_mem_usage(df):
+      """ iterate through all the columns of a dataframe and modify the data type
+          to reduce memory usage.        
+      """
+      start_mem = df.memory_usage().sum() / 1024**2
+      print('Memory usage of dataframe is {:.2f} MB'.format(start_mem))
+      
+      for col in df.columns:
+          col_type = df[col].dtype
+          
+          if col_type != object:
+              c_min = df[col].min()
+              c_max = df[col].max()
+              if str(col_type)[:3] == 'int':
+                  if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
+                      df[col] = df[col].astype(np.int8)
+                  elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
+                      df[col] = df[col].astype(np.int16)
+                  elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
+                      df[col] = df[col].astype(np.int32)
+                  elif c_min > np.iinfo(np.int64).min and c_max < np.iinfo(np.int64).max:
+                      df[col] = df[col].astype(np.int64)  
+              else:
+                  if c_min > np.finfo(np.float16).min and c_max < np.finfo(np.float16).max:
+                      df[col] = df[col].astype(np.float16)
+                  elif c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
+                      df[col] = df[col].astype(np.float32)
+                  else:
+                      df[col] = df[col].astype(np.float64)
+          else:
+              df[col] = df[col].astype('category')
+  
+      end_mem = df.memory_usage().sum() / 1024**2
+      print('Memory usage after optimization is: {:.2f} MB'.format(end_mem))
+      print('Decreased by {:.1f}%'.format(100 * (start_mem - end_mem) / start_mem))
+      
+      return df
+  ```
+  很显然，根据每一列的最大值和最小值与某一类型的最大值和最小值进行比较，如果在这个类型里面，就用这个类型来表示整列的数据，这就是的if的顺序很关键了，肯定是内存占用小的放在前，一步一步的来和占内存打的类型来比较。
+  
+  这个东西虽然很简单，但是很实用，`df`太大往往会导致内存报错，如果一开始就能够减少内存的占用的话就能减少很多麻烦，并且在对位数小的数来说，理论上计算速度会有所提高。
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
