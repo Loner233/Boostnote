@@ -1,0 +1,33 @@
+createdAt: "2020-01-09T07:18:18.079Z"
+updatedAt: "2020-01-09T07:30:07.979Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "记Scala函数参数与返回值的协变逆变关系"
+tags: []
+content: '''
+  # 记Scala函数参数与返回值的协变逆变关系
+  若`C[T]`是一个有范型的类型，并且有两个类型`A, B`, 其关系为` A <: B`
+  现在`C[A]`与`C[B]`之间有三种关系
+  __1__. `C[A] <: C[B]` 则称`C`为协变
+  __2__. `C[A] >: C[B]` 则称`C`为逆变
+  __3__. 若`C[A]`与`C[B]`没有一个是对方的子类 则称`C`为不变
+  
+  通常来说，如果有两个函数其参数类型和返回值类型如下：
+  ```scala
+  def foo(x: A1): B1
+  def bar(x: A2): B2
+  ```
+  若 `A2 <: A1` 并且 `B1 <: B2`,那么可以有以下的一个结论, 即
+  ```scala
+  foo <: bar
+  ```
+  所以，很容易得出一个结论，一个`Function`对于其参数是逆变的，而对于其返回值则是协变的，所以Scala中的`trait Function1`是如像下般定义的
+  ```scala
+  trait Function1[-T, +U] {
+    def apply(x: T): U
+  }
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

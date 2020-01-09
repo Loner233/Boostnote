@@ -1,0 +1,86 @@
+createdAt: "2019-12-24T01:48:40.981Z"
+updatedAt: "2019-12-24T06:26:07.786Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "二进制奇数位与偶数位互换"
+tags: []
+content: '''
+  ## 二进制奇数位与偶数位互换
+  __1__ 提取奇数位与偶数位，和`0b01010101010101010101010101010101`（转成16进制`0x55555555`）相‘与’（`&`）获取奇数位，和`0b10101010101010101010101010101010`（转成16进制`0xAAAAAAAA`）相‘与’（`&`）获取偶数位
+  __2__ 提取出的奇数位右移一位（`<< 1`），提取出的偶数位左移动一位(`>> 1`)
+  __3__ 通过‘或’（`|`）将两者拼接在一起
+  ```cpp 
+  #include <iostream>
+  
+  int main() {
+      int N = 585;
+      std::cout << (((N & 0x55555555) << 1) | ((N & 0xAAAAAAAA) >> 1)) << std::endl;
+      return 0;
+  }
+  ```
+  
+  ##  会议室安排
+  __1__ 把字符串时间转换成时间戳，方便比较
+  __2__ 对所有的会议进行排序，以开始时间作为第一排序标准，结束时间作为第二排序标准，比如`[['10:05', '10:25'], ['10:00', '10:40'], ['10:00', '10:30'], ['10:35', '11:20']]`的排序结果就是`[['10:00', '10:30'], ['10:00', '10:40'], ['10:05', '10:25'], ['10:35', '11:20']]`
+  __3__ 从地一个开始便利，如果后面的会议的开始时间是在当前的结束时间后面，那么就可以把这两个时间段合并在一起（把它们从排了序的列表中remove掉，并把合并后的时间段添加到一个暂存列表），最后返回排序了meetings的长度（需要单独开一间会议室）加上暂存列表的长度（多个会议能都在一间会议室里面进行）
+  
+  ```python
+  import time
+  
+  def str2timestamp(t):
+      return time.strptime(t, '%H:%M')
+  
+  def sort_meetings(meetings):
+      return sorted(meetings, key=lambda x:(x[0],x[1]))
+  
+  def solve(meetings):
+      result = []
+      sorted_meetings = sort_meetings(meetings)
+      for meeting in sorted_meetings:
+          sorted_meetings.remove(meeting)
+          for m in sorted_meetings:
+              if m[0] >= meeting[1]:
+                  meeting[1] = m[0]
+                  sorted_meetings.remove(m)
+          result.append(meeting)
+      return len(result) + len(sorted_meetings)
+  
+  if __name__ == '__main__':
+      meetings = [['10:05', '10:25'], ['10:00', '10:40'], ['10:00', '10:30'], ['10:35', '11:20']]
+      meetings = [[str2timestamp(start), str2timestamp(end)]for start, end in meetings]
+      print(solve(meetings))
+  ```
+  
+  ## 养猪
+  
+  
+  ## 友好数列
+  
+  ## 回文文字符串串
+  没看懂题目：（
+  
+  ## 损坏的计算器
+  
+  ## 矩阵位运算
+  方法不是很好，$O(n^2)$水平，应该有更好的方法，可能和加法运算及异或操作有关，没想出来
+  ```cpp
+  #include <iostream>
+  using namespace std;
+  
+  int main() {
+      int a[] = {2, 3};
+      int b[] = {1, 3};
+      int c = 0;
+      for (int i : a) {
+          for (int j : b) {
+              c ^= (i + j);
+          }
+      }
+      cout << c << endl;
+      return 0;
+  }
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
