@@ -1,0 +1,46 @@
+createdAt: "2020-01-15T02:36:10.268Z"
+updatedAt: "2020-01-15T02:55:06.926Z"
+type: "MARKDOWN_NOTE"
+folder: "7ad16a328420ce2c1cef"
+title: "Python直接调用C++动态链接库"
+tags: []
+content: '''
+  # Python直接调用C++动态链接库
+  网上很多都是教如何使用`gcc`来进行编译，然后把编译生成的`.so`文件通过python 的`ctypes`进行装载，这次遇到的是需要将整个项目编译生成动态链接库，显然蒙了。
+  
+  找了一圈，其实`CMAKE`也能够做到以上的效果
+  ```cmake
+  cmake_minimum_required(VERSION 3.15)
+  
+  project(myproject)
+  set(CMAKE_C_STANDARD 11)
+  
+  # Find source files
+  file(GLOB SOURCES src/*.cpp)
+  # Include header files
+  include_directories(include)
+  # Create shared library
+  add_library(${PROJECT_NAME} SHARED ${SOURCES})
+  # Install library
+  install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
+  # Install library headers
+  file(GLOB HEADERS include/*.h)
+  install(FILES ${HEADERS} DESTINATION include/${PROJECT_NAME})
+  ```
+  **有个注意点，对外被调用测部分需要放在`extern "C"{.......}`**
+  
+  看！通过`make`,这个整个`${SOURCES}`竟然编译成了一个`.so`
+  在python端装载
+  ```python
+  import ctypes
+  lib = ctypes.cdll.LoadLibrary("./libmyproject.so")
+  ```
+  PS:如果C++代码里面函数是带如有`char *`类型的参数的话，Python调用的时候不能直接传Python字符串进去，不然只能读到这个字符串的地一个字母。以下是正确的方法：
+  ```python
+  arg1 = ctypes.c_char_p("test".encode("utf-8"))
+  lib.foo(arg1)
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
