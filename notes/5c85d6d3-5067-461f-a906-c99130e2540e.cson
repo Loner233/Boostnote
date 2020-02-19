@@ -1,0 +1,19 @@
+createdAt: "2020-02-19T06:43:46.733Z"
+updatedAt: "2020-02-19T06:44:36.912Z"
+type: "MARKDOWN_NOTE"
+folder: "e6ce7f6bbed693c566de"
+title: "在 Windows Server上，把IE干掉"
+tags: []
+content: '''
+  ## 在 Windows Server上，把IE干掉
+  ```bash
+  dism /online /disable-feature /featurename:Internet-Explorer-Optional-amd64
+  ```
+  #### 再把IE找回来
+  ```bash
+  dism /online /enable-feature /featurename:Internet-Explorer-Optional-amd64
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
